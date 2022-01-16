@@ -9,3 +9,15 @@
 
 // start the Stimulus application
 import './bootstrap';
+import 'bootstrap/js/src/modal'
+
+var myInput = document.getElementById('openModal')
+var myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
+
+if (myModal) {
+    myModal.show();
+    myInput.addEventListener('click', function (event) {
+        event.preventDefault()
+    })
+}
+
