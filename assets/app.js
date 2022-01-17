@@ -11,12 +11,18 @@
 import './bootstrap';
 import 'bootstrap/js/src/modal'
 
-var myInput = document.getElementById('openModal')
-var myModal = new bootstrap.Modal(document.getElementById('exampleModal'))
-
-if (myModal) {
-    myModal.show();
-    myInput.addEventListener('click', function (event) {
+var openRegisterModal = document.getElementById('openRegisterModal')
+var openLoginModal = document.getElementById('openLoginModal')
+var registerModal = document.getElementById('registerModal')
+var loginModal = document.getElementById('loginModal')
+if (registerModal) {
+    new bootstrap.Modal(registerModal).show();
+    openRegisterModal.addEventListener('click', function (event) {
+        event.preventDefault()
+    })
+}else if(loginModal){
+    new bootstrap.Modal(loginModal).show();
+    openLoginModal.addEventListener('click', function (event) {
         event.preventDefault()
     })
 }
