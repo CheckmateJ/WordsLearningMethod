@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.language) }}
+    <ul class="translations" data-index="{{ form.translations|length > 0 ? form.translations|last.vars.name + 1 : 0 }}" data-prototype="{{ form_widget(form.translations.vars.prototype)|e('html_attr') }}">
+{#        {% for translation in form.translations %}#}
+        <li>{{ form_row(form.translations) }}</li>
+{#        <li>{{ form_row(translation.frontSide) }}</li>#}
+        <button type="button" class="add_item_link" data-collection-holder-class="translations">Add a flash card</button>
+{#        {% endfor %}#}
+    </ul>
+    {{ form_end(form) }}
+{% endblock %}
