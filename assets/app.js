@@ -20,10 +20,33 @@ if (registerModal) {
     openRegisterModal.addEventListener('click', function (event) {
         event.preventDefault()
     })
-}else if(loginModal){
+} else if (loginModal) {
     new bootstrap.Modal(loginModal).show();
     openLoginModal.addEventListener('click', function (event) {
         event.preventDefault()
     })
 }
 
+
+document
+    .querySelectorAll('.add_item_link')
+    .forEach(btn => {
+        btn.addEventListener("click", (e) => {
+            console.log('here')
+            const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
+
+            const item = document.createElement('li');
+
+            item.innerHTML = collectionHolder
+                .dataset
+                .prototype
+                .replace(
+                    /__name__/g,
+                    collectionHolder.dataset.index
+                );
+
+            collectionHolder.appendChild(item);
+
+            collectionHolder.dataset.index++
+        })
+    });
