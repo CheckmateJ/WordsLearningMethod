@@ -38,7 +38,6 @@ class CourseController extends AbstractController
     public function edit(Request $request)
     {
         $course = new Course();
-        $translation = new Translation();
         $form = $this->createForm(CourseType::class, $course);
         $form->handleRequest($request);
         $user = $this->getUser();
