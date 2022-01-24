@@ -30,7 +30,7 @@ class Course
     private $language;
 
     /**
-     * @ORM\OneToMany(targetEntity=Translation::class, mappedBy="course", orphanRemoval=true)
+     * @ORM\OneToMany(targetEntity=Translation::class, mappedBy="course", orphanRemoval=true, cascade={"persist"})
      */
     private $translations;
 
