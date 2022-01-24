@@ -8,9 +8,11 @@
 // any CSS you import will output into a single css file (app.css in this case)
 
 // start the Stimulus application
+
 import './bootstrap';
 import 'bootstrap/js/src/modal'
-
+import jquery from 'jquery'
+let $ = jquery;
 var openRegisterModal = document.getElementById('openRegisterModal')
 var openLoginModal = document.getElementById('openLoginModal')
 var registerModal = document.getElementById('registerModal')
