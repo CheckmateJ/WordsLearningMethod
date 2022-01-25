@@ -12,6 +12,7 @@
 import './bootstrap';
 import 'bootstrap/js/src/modal'
 import jquery from 'jquery'
+
 let $ = jquery;
 var openRegisterModal = document.getElementById('openRegisterModal')
 var openLoginModal = document.getElementById('openLoginModal')
@@ -29,16 +30,13 @@ if (registerModal) {
     })
 }
 
-
 document
     .querySelectorAll('.add_item_link')
     .forEach(btn => {
         btn.addEventListener("click", (e) => {
-            console.log('here')
             const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
-
             const item = document.createElement('li');
-
+            item.className = 'list-group-item';
             item.innerHTML = collectionHolder
                 .dataset
                 .prototype
@@ -50,5 +48,26 @@ document
             collectionHolder.appendChild(item);
 
             collectionHolder.dataset.index++
+
+            document.querySelectorAll('ul.translations li:last-child').forEach((translation) => {
+                addTagFormDeleteLink(translation)
+            })
+
         })
+
     });
+
+
+const addTagFormDeleteLink = (item) => {
+
+    const removeFormButton = document.createElement('button');
+    removeFormButton.innerText = 'Delete this translation';
+
+    item.append(removeFormButton);
+    removeFormButton.addEventListener('click', (e) => {
+        e.preventDefault();
+        // remove the li for the tag form
+        item.remove();
+    });
+}
+
