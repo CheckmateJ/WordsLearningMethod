@@ -1,0 +1,30 @@
+.translations {
+  li {
+    label {
+      display: none;
+    }
+
+    .mb-3 {
+      display: inline-flex;
+      margin-right: 20px;
+      width: 45%;
+    }
+    .header{
+      width: 45%;
+    }
+  }
+}
+
+form {
+  .form-control {
+    display: inline-flex;
+  }
+
+  #course_name, #course_language {
+    width: 30%;
+  }
+
+  fieldset {
+    display: none;
+  }
+}

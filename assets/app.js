@@ -8,8 +8,7 @@
 // any CSS you import will output into a single css file (app.css in this case)
 
 // start the Stimulus application
-
-import './bootstrap';
+// import './styles/main.scss';
 import 'bootstrap/js/src/modal'
 import jquery from 'jquery'
 
@@ -49,8 +48,8 @@ document
 
             collectionHolder.dataset.index++
 
-            document.querySelectorAll('ul.translations li:last-child').forEach((translation) => {
-                addTagFormDeleteLink(translation)
+            document.querySelectorAll('ul.translations li:last-child').forEach((li) => {
+                addTagFormDeleteLink(li)
             })
 
         })
@@ -58,12 +57,12 @@ document
     });
 
 
-const addTagFormDeleteLink = (item) => {
+const addTagFormDeleteLink = (li) => {
 
     const removeFormButton = document.createElement('button');
-    removeFormButton.innerText = 'Delete this translation';
-
-    item.append(removeFormButton);
+    removeFormButton.className = 'btn btn-danger mt-4';
+    removeFormButton.innerText = '-';
+    li.firstElementChild.append(removeFormButton);
     removeFormButton.addEventListener('click', (e) => {
         e.preventDefault();
         // remove the li for the tag form
