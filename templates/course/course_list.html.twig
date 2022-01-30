@@ -1,0 +1,6 @@
+{% block body %}
+    {% include('course/index.html.twig') %}
+    {% for type in courseTypes %}
+        <div>{{ type.name }}</div>
+    {% endfor %}
+{% endblock %}
