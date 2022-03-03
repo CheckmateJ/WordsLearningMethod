@@ -43,7 +43,6 @@ document
 
 
 const addTagFormDeleteLink = (li) => {
-
     const removeFormButton = document.createElement('button');
     removeFormButton.className = 'btn btn-danger mt-4';
     removeFormButton.innerText = '-';
@@ -55,3 +54,26 @@ const addTagFormDeleteLink = (li) => {
     });
 }
 
+let frontCard = document.querySelector('.front-card');
+document.querySelectorAll(".add-repetition").forEach(btn => {
+    btn.addEventListener('click', function(){
+        const data = { 'courseId': btn.dataset.id };
+
+        fetch('/course/flashcards', {
+            method: 'POST', // or 'PUT'
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+        frontCard.innerText = 'test';
+    })
+})

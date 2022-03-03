@@ -8,6 +8,7 @@ use App\Form\CourseType;
 use App\Repository\CourseRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -26,9 +27,9 @@ class CourseController extends AbstractController
      */
     public function index(CourseRepository $courseRepository): Response
     {
-        $user = $this->getUser()->getId();
+        $user = $this->getUser();
         return $this->render('course/index.html.twig', [
-            'courses' => $courseRepository->findBy(['user' => $user])
+            'courses' => $courseRepository->findUniqueCourse($user)
         ]);
     }
 
@@ -36,12 +37,36 @@ class CourseController extends AbstractController
      * @Route("/course/chosen/{slug}", name="chosen_course")
      */
     public function chosenCourse(CourseRepository $courseRepository, Request $request): Response
-    {  $user = $this->getUser()->getId();
+    {
+        $user = $this->getUser();
         $slug = $request->get('slug');
         return $this->render('course/course_list.html.twig', [
-            'courses' => $courseRepository->findBy(['user' => $user]),
-            'courseTypes' => $courseRepository->findBy(['language' => $slug])
+            'courses' => $courseRepository->findUniqueCourse($user),
+            'courseTypes' => $courseRepository->findBy(['language' => $slug, 'user' => $user])
         ]);
+    }
+
+    /**
+     * @Route("/course/{slug}/presentation", name="presentation_course")
+     */
+    public function presentationCourse(\Doctrine\Persistence\ManagerRegistry $registry, Request $request): Response
+    {
+        $translation = $registry->getRepository(Translation::class)->findOneBy(['course' => $request->get('slug')]);
+        return $this->render('presentation/slideshow.html.twig',[
+            'translation' => $translation,
+            'courseId' => $request->get('slug')
+        ]);
+    }
+
+    /**
+     * @Route("/course/flashcards", name="course_flashcards", methods={"POST"})
+     */
+    public function getFlashcards(\Doctrine\Persistence\ManagerRegistry $registry, Request $request): Response
+    {
+        $content = json_decode($request->getContent());
+        $id = $content->courseId;
+        $translations = $registry->getRepository(Translation::class)->findBy(['course' => $id]);
+        return new JsonResponse($translations, 200);
     }
 
     /**

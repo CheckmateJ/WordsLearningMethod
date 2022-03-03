@@ -43,6 +43,7 @@ class Course
     public function __construct()
     {
         $this->translations = new ArrayCollection();
+        $this->courseTypes = new ArrayCollection();
     }
 
     public function getId(): ?int
