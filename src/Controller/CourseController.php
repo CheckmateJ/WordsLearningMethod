@@ -66,7 +66,11 @@ class CourseController extends AbstractController
         $content = json_decode($request->getContent());
         $id = $content->courseId;
         $translations = $registry->getRepository(Translation::class)->findBy(['course' => $id]);
-        return new JsonResponse($translations, 200);
+        $words = [];
+        foreach($translations as $translation){
+            $words[$translation->getFrontSide()] = $translation->getBackSide();
+        }
+        return new JsonResponse($words, 200);
     }
 
     /**

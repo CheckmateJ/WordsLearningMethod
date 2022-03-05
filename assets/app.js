@@ -54,26 +54,56 @@ const addTagFormDeleteLink = (li) => {
     });
 }
 
-let frontCard = document.querySelector('.front-card');
+let card = document.querySelector('.course-card');
+let words, keys, courseId, front, previous;
+let i = 1;
 document.querySelectorAll(".add-repetition").forEach(btn => {
-    btn.addEventListener('click', function(){
-        const data = { 'courseId': btn.dataset.id };
-
-        fetch('/course/flashcards', {
-            method: 'POST', // or 'PUT'
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(data),
-        })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-
-        frontCard.innerText = 'test';
+    btn.addEventListener('click', function () {
+        courseId = btn.dataset.id
+        getWordsFromCourse(btn, courseId);
     })
 })
+document.querySelectorAll('.course-card').forEach(card => {
+    card.addEventListener('click', function () {
+        courseId = card.dataset.id;
+        let fromCard = true;
+        getWordsFromCourse(card, courseId, fromCard);
+    })
+})
+
+function getWordsFromCourse(element, id, fromCard = false) {
+    const data = {'courseId': id};
+    fetch('/course/flashcards', {
+        method: 'POST', // or 'PUT'
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then(response => response.json())
+        .then(data => {
+                words = [];
+                keys = [];
+                words = data;
+            if (!front) {
+                previous = card.innerText;
+                card.innerText = words[previous];
+                front = true;
+            } else {
+                card.innerText = previous;
+                front = false;
+            }
+            if (!fromCard) {
+                keys = Object.keys(words);
+                card.innerText = keys[i];
+                previous = card.innerText
+                i++;
+            }
+
+
+
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}

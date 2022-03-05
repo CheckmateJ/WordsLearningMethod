@@ -1,7 +1,6 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <div class="front-card">{{ translation.frontSide }}</div>
-    <div class="back-card" style="display: none">{{ translation.backSide }}</div>
+    <div class="course-card" data-id="{{ courseId }}">{{ translation.frontSide }}</div>
     <div>
         <button class="add-repetition" data-id="{{ courseId }}">Easy</button>
         <button class="add-repetition" data-id="{{ courseId }}">Hard</button>
