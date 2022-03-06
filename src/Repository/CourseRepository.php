@@ -36,15 +36,14 @@ class CourseRepository extends ServiceEntityRepository
     }
     */
 
-    /*
-    public function findOneBySomeField($value): ?Course
+    public function findUniqueCourse($id)
     {
         return $this->createQueryBuilder('c')
-            ->andWhere('c.exampleField = :val')
-            ->setParameter('val', $value)
+            ->select('c.language')
+            ->where('c.user = :id')
+            ->setParameter('id', $id)
+            ->distinct(true)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getResult();
     }
-    */
 }

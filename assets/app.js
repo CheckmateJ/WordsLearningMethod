@@ -1,33 +1,18 @@
-/*
- * Welcome to your app's main JavaScript file!
- *
- * We recommend including the built version of this JavaScript file
- * (and its CSS file) in your base layout (base.html.twig).
- */
+import 'bootstrap/js/src/modal';
+import 'bootstrap';
+import './styles/app.css';
+import {Modal} from 'bootstrap';
 
-// any CSS you import will output into a single css file (app.css in this case)
-
-// start the Stimulus application
-// import './styles/main.scss';
-import 'bootstrap/js/src/modal'
-import jquery from 'jquery'
-
-let $ = jquery;
-var openRegisterModal = document.getElementById('openRegisterModal')
-var openLoginModal = document.getElementById('openLoginModal')
 var registerModal = document.getElementById('registerModal')
 var loginModal = document.getElementById('loginModal')
-if (registerModal) {
-    new bootstrap.Modal(registerModal).show();
-    openRegisterModal.addEventListener('click', function (event) {
-        event.preventDefault()
-    })
-} else if (loginModal) {
-    new bootstrap.Modal(loginModal).show();
-    openLoginModal.addEventListener('click', function (event) {
-        event.preventDefault()
-    })
-}
+window.addEventListener('load', function () {
+    if (registerModal) {
+        new Modal(registerModal).show();
+    } else if (loginModal) {
+        new Modal(loginModal).show();
+    }
+})
+
 
 document
     .querySelectorAll('.add_item_link')
@@ -58,7 +43,6 @@ document
 
 
 const addTagFormDeleteLink = (li) => {
-
     const removeFormButton = document.createElement('button');
     removeFormButton.className = 'btn btn-danger mt-4';
     removeFormButton.innerText = '-';
@@ -70,3 +54,62 @@ const addTagFormDeleteLink = (li) => {
     });
 }
 
+let card = document.querySelector('.course-card');
+let words, keys, courseId, front, previous;
+let i = 1;
+document.querySelectorAll(".add-repetition").forEach(btn => {
+    btn.addEventListener('click', function (e) {
+        courseId = btn.dataset.id
+        let repetition, slideId;
+        slideId = btn.dataset.slideid;
+        console.log(btn.dataset.repetition == '0', btn.innerText == "Don't know")
+        if (btn.dataset.repetition == '0' && (btn.innerText == "Don't know" || btn.innerText == "Almost")) {
+            repetition = 1;
+        }else if(btn.dataset.repetition == '0'){
+            repetition = 3;
+        }
+        console.log(slideId)
+        getWordsFromCourse(btn, courseId, false ,repetition, slideId);
+    })
+})
+document.querySelectorAll('.course-card').forEach(card => {
+    card.addEventListener('click', function () {
+        courseId = card.dataset.id;
+        let fromCard = true;
+        getWordsFromCourse(card, courseId, fromCard);
+    })
+})
+
+function getWordsFromCourse(element, id, fromCard , repetition = null, slideId = null) {
+    const data = {'courseId': id, 'repetition': repetition, 'id': slideId};
+    fetch('/course/flashcards', {
+        method: 'POST', // or 'PUT'
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+    })
+        .then(response => response.json())
+        .then(data => {
+            words = [];
+            keys = [];
+            words = data;
+            if (!front) {
+                previous = card.innerText;
+                card.innerText = words[previous];
+                front = true;
+            } else {
+                card.innerText = previous;
+                front = false;
+            }
+            if (!fromCard) {
+                keys = Object.keys(words);
+                card.innerText = keys[i];
+                previous = card.innerText
+                i++;
+            }
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+}

@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    {% include('course/index.html.twig') %}
+    {% for type in courseTypes %}
+        <div>
+            <a class="course-type" data-id="{{ type.id }}" href="{{ path('presentation_course', {slug : type.id}) }}">{{ type.name }}</a>
+        </div>
+    {% endfor %}
+{% endblock %}

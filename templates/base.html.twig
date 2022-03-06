@@ -7,7 +7,7 @@
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
     {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
     {% block stylesheets %}
-        {{ encore_entry_link_tags('main') }}
+        {{ encore_entry_link_tags('app') }}
     {% endblock %}
 
     {% block javascripts %}
@@ -15,28 +15,19 @@
     {% endblock %}
 </head>
 <body>
-<ul class="nav nav-tabs justify-content-center">
-    <li class="nav-item">
-        <a class="nav-link active" aria-current="page" href="{{ path('new_course') }}">Course</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">Link</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link disabled">Disabled</a>
-    </li>
-    <li class="nav-item position-absolute" style="right: 150px;" data-bs-toggle="modal" data-bs-target="#loginModal" id="openLoginModal">
-        <a href="{{ path('app_login') }}" class="nav-link">Login</a>
-    </li>
-    <li class="nav-item position-absolute" style="right: 50px;" data-bs-toggle="modal" data-bs-target="#registerModal" id="openRegisterModal">
-        <a href="{{ path('app_register') }}" class="nav-link">Register</a>
-    </li>
-</ul>
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js" integrity="sha384-7+zCNj/IqJ95wo16oMtfsKbZ9ccEh31eOz1HGyDuCQ6wgnyJNSYdrPa03rtR1zdB" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js" integrity="sha384-QJHtvGhmr9XOIpI6YVutG+2QOK9T+ZnN4kzFN1RtK3zEFEIsxhlmWl5/YESvpZ13" crossorigin="anonymous"></script>
+<nav class="nav navbar navbar-dark bg-dark">
+    <a class="nav-link active text-decoration-none text-white" aria-current="page" href="{{ path('course_list') }}">Course</a>
+    {% if app.user %}
+        <a href="{{ path('app_logout') }}" class="nav-link position-absolute text-decoration-none text-white"
+           style="right: 50px;" id="openLoginModal">Logout</a>
+    {% else %}
+        <a href="{{ path('app_login') }}" class="nav-link position-absolute text-decoration-none text-white"
+           style="right: 150px;" id="openLoginModal">Login</a>
+        <a href="{{ path('app_register') }}" class="nav-link position-absolute text-decoration-none text-white"
+           style="right: 50px;"
+           id="openRegisterModal">Register</a>
+    {% endif %}
+</nav>
 {% block body %}{% endblock %}
 </body>
 </html>

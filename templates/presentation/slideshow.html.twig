@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <div class="course-card" data-id="{{ courseId }}">{{ translation.frontSide }}</div>
+    <div>
+        <button class="add-repetition" data-id="{{ courseId }}" data-repetition="{{ translation.repetition }}"
+                data-slideId="{{ translation.id }}">Don't
+            know
+        </button>
+        <button class="add-repetition" data-id="{{ courseId }}" data-repetition="{{ translation.repetition }}"
+                data-slideId="{{ translation.id }}">Almost
+        </button>
+        <button class="add-repetition" data-id="{{ courseId }}" data-repetition="{{ translation.repetition }}"
+                data-slideId="{{ translation.id }}">
+            Know
+        </button>
+    </div>
+{% endblock %}
