@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Constraints\Date;
 
 class CourseController extends AbstractController
 {
@@ -51,8 +52,8 @@ class CourseController extends AbstractController
      */
     public function presentationCourse(\Doctrine\Persistence\ManagerRegistry $registry, Request $request): Response
     {
-        $translation = $registry->getRepository(Translation::class)->findOneBy(['course' => $request->get('slug')]);
-        return $this->render('presentation/slideshow.html.twig',[
+        $translation = $registry->getRepository(Translation::class)->findOneBy(['course' => $request->get('slug'), 'repetition' => '0']);
+        return $this->render('presentation/slideshow.html.twig', [
             'translation' => $translation,
             'courseId' => $request->get('slug')
         ]);
@@ -64,10 +65,20 @@ class CourseController extends AbstractController
     public function getFlashcards(\Doctrine\Persistence\ManagerRegistry $registry, Request $request): Response
     {
         $content = json_decode($request->getContent());
-        $id = $content->courseId;
-        $translations = $registry->getRepository(Translation::class)->findBy(['course' => $id]);
+        $courseId = $content->courseId;
+        $id = $content->id;
+        $repetition = $content->repetition;
+        $translations = $registry->getRepository(Translation::class)->findBy(['course' => $courseId, 'repetition' => '0']);
+        if ($repetition !== null) {
+            $translation = $registry->getRepository(Translation::class)->find($id);
+            $translation->setRepetition($repetition);
+            $this->em->persist($translation);
+            $this->em->flush();
+        }
+
+
         $words = [];
-        foreach($translations as $translation){
+        foreach ($translations as $translation) {
             $words[$translation->getFrontSide()] = $translation->getBackSide();
         }
         return new JsonResponse($words, 200);
@@ -78,6 +89,8 @@ class CourseController extends AbstractController
      */
     public function edit(Request $request)
     {
+//        $date = new \DateTime('now');
+//        dump($date->add(new \DateInterval('P1D')));
         $course = new Course();
         $form = $this->createForm(CourseType::class, $course);
         $form->handleRequest($request);

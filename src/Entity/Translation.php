@@ -33,6 +33,11 @@ class Translation
      */
     private $backSide;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $repetition = 0;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -70,6 +75,18 @@ class Translation
     public function setBackSide(string $backSide): self
     {
         $this->backSide = $backSide;
+
+        return $this;
+    }
+
+    public function getRepetition(): ?int
+    {
+        return $this->repetition;
+    }
+
+    public function setRepetition(int $repetition): self
+    {
+        $this->repetition = $repetition;
 
         return $this;
     }

@@ -58,9 +58,18 @@ let card = document.querySelector('.course-card');
 let words, keys, courseId, front, previous;
 let i = 1;
 document.querySelectorAll(".add-repetition").forEach(btn => {
-    btn.addEventListener('click', function () {
+    btn.addEventListener('click', function (e) {
         courseId = btn.dataset.id
-        getWordsFromCourse(btn, courseId);
+        let repetition, slideId;
+        slideId = btn.dataset.slideid;
+        console.log(btn.dataset.repetition == '0', btn.innerText == "Don't know")
+        if (btn.dataset.repetition == '0' && (btn.innerText == "Don't know" || btn.innerText == "Almost")) {
+            repetition = 1;
+        }else if(btn.dataset.repetition == '0'){
+            repetition = 3;
+        }
+        console.log(slideId)
+        getWordsFromCourse(btn, courseId, false ,repetition, slideId);
     })
 })
 document.querySelectorAll('.course-card').forEach(card => {
@@ -71,8 +80,8 @@ document.querySelectorAll('.course-card').forEach(card => {
     })
 })
 
-function getWordsFromCourse(element, id, fromCard = false) {
-    const data = {'courseId': id};
+function getWordsFromCourse(element, id, fromCard , repetition = null, slideId = null) {
+    const data = {'courseId': id, 'repetition': repetition, 'id': slideId};
     fetch('/course/flashcards', {
         method: 'POST', // or 'PUT'
         headers: {
@@ -82,9 +91,9 @@ function getWordsFromCourse(element, id, fromCard = false) {
     })
         .then(response => response.json())
         .then(data => {
-                words = [];
-                keys = [];
-                words = data;
+            words = [];
+            keys = [];
+            words = data;
             if (!front) {
                 previous = card.innerText;
                 card.innerText = words[previous];
@@ -99,9 +108,6 @@ function getWordsFromCourse(element, id, fromCard = false) {
                 previous = card.innerText
                 i++;
             }
-
-
-
         })
         .catch((error) => {
             console.error('Error:', error);
