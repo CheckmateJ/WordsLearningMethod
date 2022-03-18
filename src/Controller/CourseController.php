@@ -30,7 +30,7 @@ class CourseController extends AbstractController
     {
         $user = $this->getUser();
         return $this->render('course/index.html.twig', [
-            'courses' => $courseRepository->findUniqueCourse($user)
+            'courses' => $courseRepository->findUniqueCourse($user),
         ]);
     }
 
@@ -76,12 +76,13 @@ class CourseController extends AbstractController
             $this->em->flush();
         }
 
-
         $words = [];
+        $translationId = [];
         foreach ($translations as $translation) {
             $words[$translation->getFrontSide()] = $translation->getBackSide();
+            $translationId[$translation->getFrontSide()] = $translation->getId();
         }
-        return new JsonResponse($words, 200);
+        return new JsonResponse([$words, $translationId], 200);
     }
 
     /**
