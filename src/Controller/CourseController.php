@@ -72,6 +72,8 @@ class CourseController extends AbstractController
         if ($repetition !== null) {
             $translation = $registry->getRepository(Translation::class)->find($id);
             $translation->setRepetition($repetition);
+            $date  = new \DateTime($repetition .' days');
+            $translation->setNextRepetition($date);
             $this->em->persist($translation);
             $this->em->flush();
         }
