@@ -38,6 +38,11 @@ class Translation
      */
     private $repetition = 0;
 
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $nextRepetition;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -87,6 +92,18 @@ class Translation
     public function setRepetition(int $repetition): self
     {
         $this->repetition = $repetition;
+
+        return $this;
+    }
+
+    public function getNextRepetition(): ?\DateTimeInterface
+    {
+        return $this->nextRepetition;
+    }
+
+    public function setNextRepetition(?\DateTimeInterface $nextRepetition): self
+    {
+        $this->nextRepetition = $nextRepetition;
 
         return $this;
     }
