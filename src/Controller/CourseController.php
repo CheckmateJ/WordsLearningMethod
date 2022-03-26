@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 use Symfony\Component\Validator\Constraints\Date;
 
 class CourseController extends AbstractController
@@ -41,9 +42,18 @@ class CourseController extends AbstractController
     {
         $user = $this->getUser();
         $slug = $request->get('slug');
+        $date = new \DateTime();
+        $courseTypes =  $courseRepository->findBy(['language' => $slug, 'user' => $user]);
+        $repetitionCourse = $this->getDoctrine()->getRepository(Translation::class)->findBy(['course' => $courseTypes[0]->getId()]);
+        //display length of repetitionCourse in the frontend with modal ( new words or repeetition)
+        foreach($repetitionCourse as $repetition){
+            if($repetition->getNextRepetition() && str_contains($date->format('d/M/Y'), $repetition->getNextRepetition()->format('d/M/Y'))){
+            dump($repetition);
+            }
+        }
         return $this->render('course/course_list.html.twig', [
             'courses' => $courseRepository->findUniqueCourse($user),
-            'courseTypes' => $courseRepository->findBy(['language' => $slug, 'user' => $user])
+            'courseTypes' => $courseTypes
         ]);
     }
 
@@ -62,7 +72,7 @@ class CourseController extends AbstractController
     /**
      * @Route("/course/flashcards", name="course_flashcards", methods={"POST"})
      */
-    public function getFlashcards(\Doctrine\Persistence\ManagerRegistry $registry, Request $request): Response
+    public function getFlashcards(\Doctrine\Persistence\ManagerRegistry $registry, Request $request, SerializerInterface $serializer): Response
     {
         $content = json_decode($request->getContent());
         $courseId = $content->courseId;
@@ -80,11 +90,13 @@ class CourseController extends AbstractController
 
         $words = [];
         $translationId = [];
-        foreach ($translations as $translation) {
-            $words[$translation->getFrontSide()] = $translation->getBackSide();
-            $translationId[$translation->getFrontSide()] = $translation->getId();
-        }
-        return new JsonResponse([$words, $translationId], 200);
+//        foreach ($translations as $translation) {
+            $json  = $serializer->serialize($translations[1], 'json', ['groups' => 'show_flashcard']);
+            $words = $json;
+//            $words[$translation->getFrontSide()] = $translation->getBackSide();
+//            $translationId[$translation->getFrontSide()] = $translation->getId();
+//        }
+        return new JsonResponse($json, 200);
     }
 
     /**
