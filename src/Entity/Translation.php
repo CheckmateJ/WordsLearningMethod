@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TranslationRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=TranslationRepository::class)
@@ -14,32 +15,38 @@ class Translation
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"show_flashcard"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Course::class, inversedBy="translations")
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"show_flashcard"})
      */
     private $course;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"show_flashcard"})
      */
     private $frontSide;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"show_flashcard"})
      */
     private $backSide;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"show_flashcard"})
      */
     private $repetition = 0;
 
     /**
      * @ORM\Column(type="date", nullable=true)
+     * @Groups({"show_flashcard"})
      */
     private $nextRepetition;
 

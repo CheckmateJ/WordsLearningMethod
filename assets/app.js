@@ -53,7 +53,7 @@ const addTagFormDeleteLink = (li) => {
 }
 
 let card = document.querySelector('.course-card');
-let words, keys, courseId, front, previous, repetitionId, wordId;
+let flashcard, keys, courseId, front, previous, repetitionId, wordId;
 let i = 1;
 document.querySelectorAll(".add-repetition").forEach(btn => {
     btn.addEventListener('click', function (e) {
@@ -88,10 +88,8 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
     })
         .then(response => response.json())
         .then(data => {
-            words = [];
-            keys = [];
-            words = data[0];
-            repetitionId = data[1];
+            // let flashcards = JSON.parse(data[0]);
+            flashcard = JSON.parse(data);
             if (!front) {
                 // previous = card.innerText;
                 // card.innerText = words[previous];
@@ -103,10 +101,8 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
                 front = false;
             }
             if (!fromCard) {
-                keys = Object.keys(words);
-                console.log(keys)
-                card.dataset.wordId = repetitionId[keys[i]];
-                card.innerText = keys[i];
+                card.dataset.wordId = flashcard.id
+                card.innerText = flashcard.frontSide
                 previous = card.innerText
             }
         })
@@ -115,14 +111,5 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
         });
 }
 
-/*
- 1. Refactoring
- 2. Check names
- 3. Add field in entity => repetitionDate
- 4. Based on  button repetition add repetition to date
- 5. When i fetching data from db check fieldRepetitionDate if This field is empty fetch this word
+// to change  way of display words  -> first word also from js displaying
 
-    Repetitions:
-    2. For each course add button repetition
-    3. Check in corntroller if repetitionDate in that course  equals = today if yes count this word and add to new array ?
- */
