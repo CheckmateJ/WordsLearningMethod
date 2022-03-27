@@ -1,6 +1,17 @@
    {{ include('course/index.html.twig') }}
     {% for type in courseTypes %}
         <div>
-            <a class="course-type" data-id="{{ type.id }}" href="{{ path('presentation_course', {slug : type.id}) }}">{{ type.name }}</a>
+            <a class="course-type" data-id="{{ type.id }}" href="{{ path('presentation_course', {slug : type.id}) }}"
+               data-bs-toggle="modal" data-bs-target="#exampleModal">{{ type.name }}</a>
         </div>
     {% endfor %}
+   <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+       <div class="modal-dialog">
+           <div class="modal-content">
+               <div class="modal-body">
+                   <a type="button" class="btn btn-primary d-block start-new-words">Learn new words</a>
+                   <a type="button" class="btn btn-primary d-block start-repetition">Start repetition</a>
+                   <a type="button" class="btn btn-secondary d-block" data-bs-dismiss="modal">Close</a>
+               </div>
+           </div>
+       </div>

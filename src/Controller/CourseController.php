@@ -13,7 +13,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Constraints\Date;
 
 class CourseController extends AbstractController
 {
@@ -43,12 +42,13 @@ class CourseController extends AbstractController
         $user = $this->getUser();
         $slug = $request->get('slug');
         $date = new \DateTime();
-        $courseTypes =  $courseRepository->findBy(['language' => $slug, 'user' => $user]);
+        $courseTypes = $courseRepository->findBy(['language' => $slug, 'user' => $user]);
+        dump($courseTypes);
         $repetitionCourse = $this->getDoctrine()->getRepository(Translation::class)->findBy(['course' => $courseTypes[0]->getId()]);
-        //display length of repetitionCourse in the frontend with modal ( new words or repeetition)
-        foreach($repetitionCourse as $repetition){
-            if($repetition->getNextRepetition() && str_contains($date->format('d/M/Y'), $repetition->getNextRepetition()->format('d/M/Y'))){
-            dump($repetition);
+//        display length of repetitionCourse in the frontend with modal ( new words or repeetition)
+        foreach ($repetitionCourse as $repetition) {
+            if ($repetition->getNextRepetition() && str_contains($date->format('d/M/Y'), $repetition->getNextRepetition()->format('d/M/Y'))) {
+                dump($repetition);
             }
         }
         return $this->render('course/course_list.html.twig', [
@@ -82,20 +82,17 @@ class CourseController extends AbstractController
         if ($repetition !== null) {
             $translation = $registry->getRepository(Translation::class)->find($id);
             $translation->setRepetition($repetition);
-            $date  = new \DateTime($repetition .' days');
+            $date = new \DateTime($repetition . ' days');
             $translation->setNextRepetition($date);
             $this->em->persist($translation);
             $this->em->flush();
         }
+        if (!isset($translations[1])) {
+            return new JsonResponse(
+                ['message' => 'You did all words for today'], 200);
+        }
 
-        $words = [];
-        $translationId = [];
-//        foreach ($translations as $translation) {
-            $json  = $serializer->serialize($translations[1], 'json', ['groups' => 'show_flashcard']);
-            $words = $json;
-//            $words[$translation->getFrontSide()] = $translation->getBackSide();
-//            $translationId[$translation->getFrontSide()] = $translation->getId();
-//        }
+        $json = $serializer->serialize($translations[1], 'json', ['groups' => 'show_flashcard']);
         return new JsonResponse($json, 200);
     }
 
