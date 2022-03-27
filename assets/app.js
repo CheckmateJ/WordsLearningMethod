@@ -88,7 +88,10 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
     })
         .then(response => response.json())
         .then(data => {
-            // let flashcards = JSON.parse(data[0]);
+            if(data.message){
+                alert(data.message);
+                window.location.href = `/course`;
+            }
             flashcard = JSON.parse(data);
             if (!front) {
                 // previous = card.innerText;
@@ -111,5 +114,13 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
         });
 }
 
-// to change  way of display words  -> first word also from js displaying
+let id;
 
+document.querySelectorAll('.course-type').forEach(course => {
+    course.addEventListener('click', function () {
+        id = course.dataset.id;
+    })
+})
+document.querySelector('.start-new-words').addEventListener('click', function () {
+    window.location.href = `/course/${id}/presentation`;
+})
