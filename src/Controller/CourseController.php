@@ -7,6 +7,7 @@ use App\Entity\Translation;
 use App\Form\CourseType;
 use App\Repository\CourseRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -35,25 +36,32 @@ class CourseController extends AbstractController
     }
 
     /**
-     * @Route("/course/chosen/{slug}", name="chosen_course")
+     * @Route("/course/chosen/{slug}", name="chosen_course", methods={"POST|GET"})
      */
-    public function chosenCourse(CourseRepository $courseRepository, Request $request): Response
+    public function chosenCourse(CourseRepository $courseRepository, ManagerRegistry $doctrine, Request $request, SerializerInterface $serializer): Response
     {
+        $content = json_decode($request->getContent());
+        dump($request->getMethod());
         $user = $this->getUser();
         $slug = $request->get('slug');
         $date = new \DateTime();
         $courseTypes = $courseRepository->findBy(['language' => $slug, 'user' => $user]);
-        dump($courseTypes);
-        $repetitionCourse = $this->getDoctrine()->getRepository(Translation::class)->findBy(['course' => $courseTypes[0]->getId()]);
-//        display length of repetitionCourse in the frontend with modal ( new words or repeetition)
-        foreach ($repetitionCourse as $repetition) {
-            if ($repetition->getNextRepetition() && str_contains($date->format('d/M/Y'), $repetition->getNextRepetition()->format('d/M/Y'))) {
-                dump($repetition);
+        $count = 0;
+        $countRepetition = [];
+        foreach ($courseTypes as $key => $type) {
+            $repetitionCourse = $doctrine->getRepository(Translation::class)->findBy(['course' => $courseTypes[$key]->getId()]);
+            foreach ($repetitionCourse as $repetition) {
+                if ($repetition->getNextRepetition() && str_contains($date->format('d/M/Y'), $repetition->getNextRepetition()->format('d/M/Y'))) {
+                    $count++;
+                }
             }
+            $countRepetition[$type->getId()] = $count;
+            $count = 0;
         }
         return $this->render('course/course_list.html.twig', [
             'courses' => $courseRepository->findUniqueCourse($user),
-            'courseTypes' => $courseTypes
+            'courseTypes' => $courseTypes,
+            'repetitionLength' => $countRepetition
         ]);
     }
 
@@ -118,5 +126,32 @@ class CourseController extends AbstractController
         return $this->render('course/form.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    /**
+     * @Route("/course/repetition", name="course_repetition", methods={"POST"})
+     */
+    public function getRepetition(\Doctrine\Persistence\ManagerRegistry $registry, Request $request, SerializerInterface $serializer): Response
+    {
+        $content = json_decode($request->getContent());
+        $courseId = $content->courseId;
+        $id = $content->id;
+        $repetition = $content->repetition;
+        $translations = $registry->getRepository(Translation::class)->findBy(['course' => $courseId, 'repetition' => '0']);
+        if ($repetition !== null) {
+            $translation = $registry->getRepository(Translation::class)->find($id);
+            $translation->setRepetition($repetition);
+            $date = new \DateTime($repetition . ' days');
+            $translation->setNextRepetition($date);
+            $this->em->persist($translation);
+            $this->em->flush();
+        }
+        if (!isset($translations[1])) {
+            return new JsonResponse(
+                ['message' => 'You did all words for today'], 200);
+        }
+
+        $json = $serializer->serialize($translations[1], 'json', ['groups' => 'show_flashcard']);
+        return new JsonResponse($json, 200);
     }
 }
