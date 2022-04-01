@@ -58,14 +58,22 @@ let i = 1;
 document.querySelectorAll(".add-repetition").forEach(btn => {
     btn.addEventListener('click', function (e) {
         courseId = btn.dataset.courseId
-        let repetition;
-        wordId = btn.previousElementSibling.dataset.wordId
-        if (btn.dataset.repetition === '0' && (btn.innerText === "Don't know" || btn.innerText === "Almost")) {
-            repetition = 1;
-        } else if (btn.dataset.repetition === '0') {
-            repetition = 3;
+        let card = document.querySelector('.course-card');
+        let currentRepetition = 0;
+        let lastRepetition = parseInt(card.dataset.repetition);
+        wordId = card.dataset.wordId;
+        if (btn.innerText === "Don't know" || btn.innerText === "Almost") {
+            currentRepetition = 1;
+        } else if (lastRepetition === 1 || lastRepetition === 0) {
+            currentRepetition = 3;
+        } else if (lastRepetition === 3) {
+            currentRepetition = 5;
+        } else if (lastRepetition === 5) {
+            currentRepetition = 7
+        } else if (lastRepetition >= 7) {
+            currentRepetition = lastRepetition * 2;
         }
-        getWordsFromCourse(btn, courseId, false, repetition, wordId);
+        getWordsFromCourse(btn, courseId, false, currentRepetition, wordId, lastRepetition);
     })
 })
 
@@ -77,8 +85,17 @@ document.querySelectorAll('.course-card').forEach(card => {
     })
 })
 
-function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = null) {
-    const data = {'courseId': id, 'repetition': repetition, 'id': wordId};
+function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = null, lastRepetition) {
+    console.log(id, repetition, wordId)
+    let newCourse = window.location.pathname.indexOf('presentation') > -1;
+    console.log(newCourse)
+    const data = {
+        'courseId': id,
+        'repetition': repetition,
+        'id': wordId,
+        lastRepetition: lastRepetition,
+        newCourse: newCourse
+    };
     fetch('/course/flashcards', {
         method: 'POST', // or 'PUT'
         headers: {
@@ -88,11 +105,13 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
     })
         .then(response => response.json())
         .then(data => {
+            console.log(JSON.parse(data))
             if(data.message){
                 alert(data.message);
                 window.location.href = `/course`;
             }
             flashcard = JSON.parse(data);
+            console.log(flashcard)
             if (!front) {
                 // previous = card.innerText;
                 // card.innerText = words[previous];
@@ -104,8 +123,10 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
                 front = false;
             }
             if (!fromCard) {
+                console.log(card)
                 card.dataset.wordId = flashcard.id
-                card.innerText = flashcard.frontSide
+                card.dataset.repetition = flashcard.repetition;
+                card.innerText = flashcard.frontSide;
                 previous = card.innerText
             }
         })
@@ -124,3 +145,14 @@ document.querySelectorAll('.course-type').forEach(course => {
 document.querySelector('.start-new-words').addEventListener('click', function () {
     window.location.href = `/course/${id}/presentation`;
 })
+document.querySelector('.start-repetition').addEventListener('click', function () {
+    window.location.href = `/course/${id}/repetition`;
+})
+
+function getRepetition() {
+
+}
+
+
+// fetching all words to learning
+// changing cureently way to displaying to loop each word and then displaying words
