@@ -1,20 +1,17 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <div>
+    {% if cards.id is defined %}
         <div>
-            <div class="course-card" data-course-id="{{ courseId }}"
-                 data-word-id="{{ translation.id }}">{{ translation.frontSide }}</div>
-            <button class="add-repetition" data-course-id="{{ courseId }}" data-repetition="{{ translation.repetition }}"
-            >Don't
-                know
-            </button>
-            <button class="add-repetition" data-course-id="{{ courseId }}" data-repetition="{{ translation.repetition }}"
-                    data-slideId="{{ translation.id }}">Almost
-            </button>
-            <button class="add-repetition" data-course-id="{{ courseId }}" data-repetition="{{ translation.repetition }}"
-                    data-slideId="{{ translation.id }}">
-                Know
-            </button>
+            <div>
+                <div class="course-card" data-course-id="{{ courseId }}"
+                     data-word-id="{{ cards.id }}" data-repetition="{{ cards.repetition }}">{{ cards.frontSide }}</div>
+                <button class="add-repetition" data-course-id="{{ courseId }}">Don't know</button>
+                <button class="add-repetition" data-course-id="{{ courseId }}" data-slideId="{{ cards.id }}">Almost
+                </button>
+                <button class="add-repetition" data-course-id="{{ courseId }}" data-slideId="{{ cards.id }}"> Know
+                </button>
+            </div>
         </div>
-    </div>
+    {% else %}
+    {% endif %}
 {% endblock %}

@@ -18,10 +18,14 @@ use Symfony\Component\Serializer\SerializerInterface;
 class CourseController extends AbstractController
 {
     private $em;
+    private $course;
+    private $doctrine;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, CourseRepository $course, ManagerRegistry $doctrine)
     {
         $this->em = $em;
+        $this->course = $course;
+        $this->doctrine = $doctrine;
     }
 
     /**
@@ -38,30 +42,15 @@ class CourseController extends AbstractController
     /**
      * @Route("/course/chosen/{slug}", name="chosen_course", methods={"POST|GET"})
      */
-    public function chosenCourse(CourseRepository $courseRepository, ManagerRegistry $doctrine, Request $request, SerializerInterface $serializer): Response
+    public function chosenCourse(Request $request): Response
     {
-        $content = json_decode($request->getContent());
-        dump($request->getMethod());
-        $user = $this->getUser();
         $slug = $request->get('slug');
-        $date = new \DateTime();
-        $courseTypes = $courseRepository->findBy(['language' => $slug, 'user' => $user]);
-        $count = 0;
-        $countRepetition = [];
-        foreach ($courseTypes as $key => $type) {
-            $repetitionCourse = $doctrine->getRepository(Translation::class)->findBy(['course' => $courseTypes[$key]->getId()]);
-            foreach ($repetitionCourse as $repetition) {
-                if ($repetition->getNextRepetition() && str_contains($date->format('d/M/Y'), $repetition->getNextRepetition()->format('d/M/Y'))) {
-                    $count++;
-                }
-            }
-            $countRepetition[$type->getId()] = $count;
-            $count = 0;
-        }
+        $user = $this->getUser();
+        $course = $this->getRepetition($slug, $user);
         return $this->render('course/course_list.html.twig', [
-            'courses' => $courseRepository->findUniqueCourse($user),
-            'courseTypes' => $courseTypes,
-            'repetitionLength' => $countRepetition
+            'courses' => $this->course->findUniqueCourse($user),
+            'courseTypes' => $course['type'],
+            'repetitionLength' => $course['length']
         ]);
     }
 
@@ -72,7 +61,23 @@ class CourseController extends AbstractController
     {
         $translation = $registry->getRepository(Translation::class)->findOneBy(['course' => $request->get('slug'), 'repetition' => '0']);
         return $this->render('presentation/slideshow.html.twig', [
-            'translation' => $translation,
+            'cards' => $translation,
+            'courseId' => $request->get('slug')
+        ]);
+    }
+
+    /**
+     * @Route("/course/{slug}/repetition", name="repetition_course")
+     */
+    public function repetitionCourse(\Doctrine\Persistence\ManagerRegistry $registry, Request $request): Response
+    {
+        $slug = $request->get('slug');
+        $course = $registry->getRepository(Course::class)->findOneBy(['id' => $slug]);
+        $type = $course->getLanguage();
+        $cards = $this->getRepetition($type, $this->getUser());
+        dump($cards);
+        return $this->render('presentation/slideshow.html.twig', [
+            'cards' => $cards['cards'][0],
             'courseId' => $request->get('slug')
         ]);
     }
@@ -82,11 +87,18 @@ class CourseController extends AbstractController
      */
     public function getFlashcards(\Doctrine\Persistence\ManagerRegistry $registry, Request $request, SerializerInterface $serializer): Response
     {
+        $date = new \DateTime('now');
         $content = json_decode($request->getContent());
+        $newCourse = $content->newCourse;
         $courseId = $content->courseId;
         $id = $content->id;
         $repetition = $content->repetition;
-        $translations = $registry->getRepository(Translation::class)->findBy(['course' => $courseId, 'repetition' => '0']);
+        $lastRepetition = $content->lastRepetition;
+        if($newCourse){
+            $translations = $registry->getRepository(Translation::class)->findBy(['course' => $courseId, 'repetition' => '0']);
+        }else{
+            $translations = $registry->getRepository(Translation::class)->findBy(['course' => $courseId, 'nextRepetition' => $date]);
+        }
         if ($repetition !== null) {
             $translation = $registry->getRepository(Translation::class)->find($id);
             $translation->setRepetition($repetition);
@@ -99,7 +111,6 @@ class CourseController extends AbstractController
             return new JsonResponse(
                 ['message' => 'You did all words for today'], 200);
         }
-
         $json = $serializer->serialize($translations[1], 'json', ['groups' => 'show_flashcard']);
         return new JsonResponse($json, 200);
     }
@@ -131,8 +142,9 @@ class CourseController extends AbstractController
     /**
      * @Route("/course/repetition", name="course_repetition", methods={"POST"})
      */
-    public function getRepetition(\Doctrine\Persistence\ManagerRegistry $registry, Request $request, SerializerInterface $serializer): Response
+    public function getCourse(\Doctrine\Persistence\ManagerRegistry $registry, Request $request, SerializerInterface $serializer): Response
     {
+
         $content = json_decode($request->getContent());
         $courseId = $content->courseId;
         $id = $content->id;
@@ -154,4 +166,37 @@ class CourseController extends AbstractController
         $json = $serializer->serialize($translations[1], 'json', ['groups' => 'show_flashcard']);
         return new JsonResponse($json, 200);
     }
+
+    public function getRepetition($slug, $user)
+    {
+        $courseTypes = $this->course->findBy(['language' => $slug, 'user' => $user]);
+        $date = new \DateTime();
+        $date->add(new \DateInterval('PT2H'));
+        $count = 0;
+        $countRepetition = [];
+        $newWords = [];
+        $cardsRepeat = [];
+        foreach ($courseTypes as $key => $type) {
+            $translations = $this->doctrine->getRepository(Translation::class)->findBy(['course' => $courseTypes[$key]->getId()]);
+            $newCards = $this->doctrine->getRepository(Translation::class)->findBy(['course' => $courseTypes[$key]->getId(), 'repetition' => '0']);
+            foreach ($translations as $translation) {
+                if ($translation->getNextRepetition() && str_contains($date->format('d/M/Y'), $translation->getNextRepetition()->format('d/M/Y'))) {
+                    $count++;
+                    $cardsRepeat[] = $translation;
+                }
+            }
+            $countRepetition[$type->getId()] = $count;
+            $count = 0;
+
+            foreach ($newCards as $card) {
+                $count++;
+            }
+            $newWords[$type->getId()] = $count;
+            $count = 0;
+        }
+
+        return ['length' => $countRepetition, 'type' => $courseTypes, 'cards' => $cardsRepeat];
+
+    }
+
 }
