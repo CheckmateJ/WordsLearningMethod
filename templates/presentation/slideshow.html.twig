@@ -5,10 +5,15 @@
             <div>
                 <div class="course-card" data-course-id="{{ courseId }}"
                      data-word-id="{{ cards.id }}" data-repetition="{{ cards.repetition }}">{{ cards.frontSide }}</div>
-                <button class="add-repetition" data-course-id="{{ courseId }}">Don't know</button>
-                <button class="add-repetition" data-course-id="{{ courseId }}" data-slideId="{{ cards.id }}">Almost
+                <div class="back-side" style="display: none">{{ cards.backSide }}</div>
+                <button class="btn btn-primary check">Check</button>
+                <button class="add-repetition" style="display: none" data-course-id="{{ courseId }}">Don't know</button>
+                <button class="add-repetition" style="display: none" data-course-id="{{ courseId }}"
+                        data-slideId="{{ cards.id }}">Almost
                 </button>
-                <button class="add-repetition" data-course-id="{{ courseId }}" data-slideId="{{ cards.id }}"> Know
+                <button class="add-repetition" style="display: none" data-course-id="{{ courseId }}"
+                        data-slideId="{{ cards.id }}">
+                    Know
                 </button>
             </div>
         </div>

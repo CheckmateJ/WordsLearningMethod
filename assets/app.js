@@ -62,8 +62,10 @@ document.querySelectorAll(".add-repetition").forEach(btn => {
         let currentRepetition = 0;
         let lastRepetition = parseInt(card.dataset.repetition);
         wordId = card.dataset.wordId;
-        if (btn.innerText === "Don't know" || btn.innerText === "Almost") {
+        if (btn.innerText === "Don't know") {
             currentRepetition = 1;
+        } else if (btn.innerText === "Almost") {
+            currentRepetition = 2;
         } else if (lastRepetition === 1 || lastRepetition === 0) {
             currentRepetition = 3;
         } else if (lastRepetition === 3) {
@@ -126,6 +128,8 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
                 console.log(card)
                 card.dataset.wordId = flashcard.id
                 card.dataset.repetition = flashcard.repetition;
+                document.querySelector('.back-side').innerText = flashcard.backSide;
+                document.querySelector('.back-side').style.display = 'none';
                 card.innerText = flashcard.frontSide;
                 previous = card.innerText
             }
@@ -142,16 +146,19 @@ document.querySelectorAll('.course-type').forEach(course => {
         id = course.dataset.id;
     })
 })
-document.querySelector('.start-new-words').addEventListener('click', function () {
-    window.location.href = `/course/${id}/presentation`;
+// document.querySelector('.start-new-words').addEventListener('click', function () {
+//     window.location.href = `/course/${id}/presentation`;
+// })
+// document.querySelector('.start-repetition').addEventListener('click', function () {
+//     window.location.href = `/course/${id}/repetition`;
+// })
+document.querySelector('.check').addEventListener('click', function () {
+    console.log(document.querySelector('.back-side'))
+    document.querySelector('.back-side').style.display = 'block';
+    document.querySelectorAll('.add-repetition').forEach(btn => {
+        btn.style.display = 'inline-flex';
+    })
 })
-document.querySelector('.start-repetition').addEventListener('click', function () {
-    window.location.href = `/course/${id}/repetition`;
-})
-
-function getRepetition() {
-
-}
 
 
 // fetching all words to learning
