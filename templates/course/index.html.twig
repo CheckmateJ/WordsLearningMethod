@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <ul class="nav nav-tabs">
+        {% for course in courses %}
+            <li class="nav-item">
+                <a class="nav-link {% if app.request.get('slug') == course.language %} active {% endif %} "
+                   aria-current="page" href="{{ path('chosen_course',{slug: course.language}) }}">{{ course.language }}</a>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
