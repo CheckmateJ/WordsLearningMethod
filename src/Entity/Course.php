@@ -42,6 +42,11 @@ class Course
      */
     private $user;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $reverse;
+
     public function __construct()
     {
         $this->translations = new ArrayCollection();
@@ -115,6 +120,18 @@ class Course
     public function setUser(?User $user): self
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function getReverse(): ?bool
+    {
+        return $this->reverse;
+    }
+
+    public function setReverse(bool $reverse): self
+    {
+        $this->reverse = $reverse;
 
         return $this;
     }

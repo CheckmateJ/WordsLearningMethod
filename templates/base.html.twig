@@ -17,6 +17,7 @@
 <body>
 <nav class="nav navbar navbar-dark bg-dark">
     <a class="nav-link active text-decoration-none text-white" aria-current="page" href="{{ path('course_list') }}">Course</a>
+    <a class="nav-link active text-decoration-none text-white" aria-current="page" href="{{ path('new_course') }}">New</a>
     {% if app.user %}
         <a href="{{ path('app_logout') }}" class="nav-link position-absolute text-decoration-none text-white"
            style="right: 50px;" id="openLoginModal">Logout</a>
