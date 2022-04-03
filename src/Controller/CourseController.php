@@ -129,6 +129,20 @@ class CourseController extends AbstractController
 
         if ($form->isSubmitted() && $form->isSubmitted()) {
             $course->setUser($user);
+            if ($form->get('reverse')->getData()) {
+                $reverseCourse = new Course();
+                $reverseCourse->setUser($user);
+                $reverseCourse->setName($form->get('name')->getData() . ' reverse');
+                $reverseCourse->setLanguage($form->get('language')->getData());
+                foreach ($form->get('translations')->getData() as $card) {
+                    $translation = new Translation();
+                    $translation->setCourse($reverseCourse);
+                    $translation->setFrontSide($card->getBackSide());
+                    $translation->setBackSide($card->getFrontSide());
+                    $this->em->persist($translation);
+                }
+                $this->em->persist($reverseCourse);
+            }
             $this->em->persist($course);
             $this->em->flush();
 

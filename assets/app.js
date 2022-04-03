@@ -107,13 +107,11 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
     })
         .then(response => response.json())
         .then(data => {
-            console.log(JSON.parse(data))
             if(data.message){
                 alert(data.message);
                 window.location.href = `/course`;
             }
             flashcard = JSON.parse(data);
-            console.log(flashcard)
             if (!front) {
                 // previous = card.innerText;
                 // card.innerText = words[previous];
@@ -125,11 +123,13 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
                 front = false;
             }
             if (!fromCard) {
-                console.log(card)
                 card.dataset.wordId = flashcard.id
                 card.dataset.repetition = flashcard.repetition;
                 document.querySelector('.back-side').innerText = flashcard.backSide;
                 document.querySelector('.back-side').style.display = 'none';
+                document.querySelectorAll('.add-repetition').forEach(btn => {
+                    btn.style.display = 'none';
+                })
                 card.innerText = flashcard.frontSide;
                 previous = card.innerText
             }
@@ -141,22 +141,35 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
 
 let id;
 
+console.log(document.querySelector('.check'))
+let check = document.querySelector('.check');
+let newWords = document.querySelector('.start-new-words')
+let repetition = document.querySelector('.start-repetition');
+if (check) {
+    check.addEventListener('click', function () {
+
+        document.querySelector('.back-side').style.display = 'block';
+        document.querySelectorAll('.add-repetition').forEach(btn => {
+            btn.style.display = 'inline-flex';
+        })
+    })
+}
+
+if (newWords) {
+    newWords.addEventListener('click', function () {
+        window.location.href = `/course/${id}/presentation`;
+    })
+}
+
+if (repetition) {
+    repetition.addEventListener('click', function () {
+        window.location.href = `/course/${id}/repetition`;
+    })
+}
+
 document.querySelectorAll('.course-type').forEach(course => {
     course.addEventListener('click', function () {
         id = course.dataset.id;
-    })
-})
-// document.querySelector('.start-new-words').addEventListener('click', function () {
-//     window.location.href = `/course/${id}/presentation`;
-// })
-// document.querySelector('.start-repetition').addEventListener('click', function () {
-//     window.location.href = `/course/${id}/repetition`;
-// })
-document.querySelector('.check').addEventListener('click', function () {
-    console.log(document.querySelector('.back-side'))
-    document.querySelector('.back-side').style.display = 'block';
-    document.querySelectorAll('.add-repetition').forEach(btn => {
-        btn.style.display = 'inline-flex';
     })
 })
 
