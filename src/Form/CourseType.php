@@ -26,7 +26,7 @@ class CourseType extends AbstractType
             ])
             ->add('reverse', CheckboxType::class,[
                 'label' => 'Do you want to create the reverse course',
-                'required' => false
+                'required' => false,
             ])
         ;
     }
