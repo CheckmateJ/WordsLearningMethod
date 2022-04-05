@@ -66,7 +66,7 @@ document.querySelectorAll(".add-repetition").forEach(btn => {
             currentRepetition = 1;
         } else if (btn.innerText === "Almost") {
             currentRepetition = 2;
-        } else if (lastRepetition === 1 || lastRepetition === 0) {
+        } else if (lastRepetition === 1 || lastRepetition === 0 || lastRepetition === 2) {
             currentRepetition = 3;
         } else if (lastRepetition === 3) {
             currentRepetition = 5;
@@ -112,6 +112,7 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
                 window.location.href = `/course`;
             }
             flashcard = JSON.parse(data);
+            console.log(flashcard)
             if (!front) {
                 // previous = card.innerText;
                 // card.innerText = words[previous];

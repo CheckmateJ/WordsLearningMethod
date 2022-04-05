@@ -4,8 +4,9 @@
     <div class="w-100 text-center mt-5">
         {{ form_widget(form.name, {attr: {placeholder: "enter course name"}}) }}
         {{ form_widget(form.language,{attr: {placeholder: "enter language"}}) }}
-        {{ form_label(form.reverse) }}
-        {{ form_row(form.reverse) }}
+        <div class="d-inline-block">
+            {{ form_row(form.reverse) }}
+        </div>
     </div>
     <ul class="list-group list-group-flush translations"
         data-index="{{ form.translations|length > 0 ? form.translations|last.vars.name + 1 : 0 }}"

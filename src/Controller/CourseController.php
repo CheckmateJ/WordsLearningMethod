@@ -94,29 +94,32 @@ class CourseController extends AbstractController
         $id = $content->id;
         $repetition = $content->repetition;
         $lastRepetition = $content->lastRepetition;
+
+        if ($repetition !== null) {
+            $translation = $registry->getRepository(Translation::class)->find($id);
+            $translation->setRepetition($repetition);
+            $translation->setNextRepetition(new \DateTime($repetition . ' days'));
+            $this->em->persist($translation);
+            $this->em->flush();
+        }
+
         if($newCourse){
             $translations = $registry->getRepository(Translation::class)->findBy(['course' => $courseId, 'repetition' => '0']);
         }else{
             $translations = $registry->getRepository(Translation::class)->findBy(['course' => $courseId, 'nextRepetition' => $date]);
         }
-        if ($repetition !== null) {
-            $translation = $registry->getRepository(Translation::class)->find($id);
-            $translation->setRepetition($repetition);
-            $date = new \DateTime($repetition . ' days');
-            $translation->setNextRepetition($date);
-            $this->em->persist($translation);
-            $this->em->flush();
-        }
-        if (!isset($translations[1])) {
+
+        if (!isset($translations[0])) {
             return new JsonResponse(
                 ['message' => 'You did all words for today'], 200);
         }
-        $json = $serializer->serialize($translations[1], 'json', ['groups' => 'show_flashcard']);
+        $json = $serializer->serialize($translations[0], 'json', ['groups' => 'show_flashcard']);
         return new JsonResponse($json, 200);
     }
 
     /**
      * @Route("/course/new", name="new_course")
+     * @Route("/course/edit/{id}", name="edit_course")
      */
     public function edit(Request $request)
     {
@@ -153,33 +156,7 @@ class CourseController extends AbstractController
         ]);
     }
 
-    /**
-     * @Route("/course/repetition", name="course_repetition", methods={"POST"})
-     */
-    public function getCourse(\Doctrine\Persistence\ManagerRegistry $registry, Request $request, SerializerInterface $serializer): Response
-    {
 
-        $content = json_decode($request->getContent());
-        $courseId = $content->courseId;
-        $id = $content->id;
-        $repetition = $content->repetition;
-        $translations = $registry->getRepository(Translation::class)->findBy(['course' => $courseId, 'repetition' => '0']);
-        if ($repetition !== null) {
-            $translation = $registry->getRepository(Translation::class)->find($id);
-            $translation->setRepetition($repetition);
-            $date = new \DateTime($repetition . ' days');
-            $translation->setNextRepetition($date);
-            $this->em->persist($translation);
-            $this->em->flush();
-        }
-        if (!isset($translations[1])) {
-            return new JsonResponse(
-                ['message' => 'You did all words for today'], 200);
-        }
-
-        $json = $serializer->serialize($translations[1], 'json', ['groups' => 'show_flashcard']);
-        return new JsonResponse($json, 200);
-    }
 
     public function getRepetition($slug, $user)
     {
