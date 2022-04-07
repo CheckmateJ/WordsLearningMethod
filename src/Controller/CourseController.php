@@ -106,7 +106,7 @@ class CourseController extends AbstractController
         if($newCourse){
             $translations = $registry->getRepository(Translation::class)->findBy(['course' => $courseId, 'repetition' => '0']);
         }else{
-            $translations = $registry->getRepository(Translation::class)->findBy(['course' => $courseId, 'nextRepetition' => $date]);
+            $translations = $registry->getRepository(Translation::class)->findRepetition($courseId);
         }
 
         if (!isset($translations[0])) {
@@ -168,13 +168,11 @@ class CourseController extends AbstractController
         $newWords = [];
         $cardsRepeat = [];
         foreach ($courseTypes as $key => $type) {
-            $translations = $this->doctrine->getRepository(Translation::class)->findBy(['course' => $courseTypes[$key]->getId()]);
+            $translations = $this->doctrine->getRepository(Translation::class)->findRepetition($courseTypes[$key]->getId());
             $newCards = $this->doctrine->getRepository(Translation::class)->findBy(['course' => $courseTypes[$key]->getId(), 'repetition' => '0']);
             foreach ($translations as $translation) {
-                if ($translation->getNextRepetition() && str_contains($date->format('d/M/Y'), $translation->getNextRepetition()->format('d/M/Y'))) {
                     $count++;
                     $cardsRepeat[] = $translation;
-                }
             }
             $countRepetition[$type->getId()] = $count;
             $count = 0;

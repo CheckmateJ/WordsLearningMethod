@@ -19,6 +19,18 @@ class TranslationRepository extends ServiceEntityRepository
         parent::__construct($registry, Translation::class);
     }
 
+    public function findRepetition($id)
+    {
+        return $this->createQueryBuilder('t')
+            ->innerJoin('t.course', 'course' )
+            ->andWhere('course.id = :id')
+            ->andWhere('t.nextRepetition <= :date')
+            ->setParameter('id', $id)
+            ->setParameter('date', new \DateTime('now'))
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Translation[] Returns an array of Translation objects
     //  */
