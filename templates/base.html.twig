@@ -19,6 +19,7 @@
     <div class="d-inline-flex">
         <a class="nav-link active text-decoration-none text-white " aria-current="page" href="{{ path('course_list') }}">Course</a>
         <a class="nav-link active text-decoration-none text-white" aria-current="page" href="{{ path('new_course') }}">New</a>
+        <a class="nav-link active text-decoration-none text-white" aria-current="page" href="{{ path('learning_plan_new') }}">Plan</a>
     </div>
     {% if app.user %}
         <a href="{{ path('app_logout') }}" class="nav-link position-absolute text-decoration-none text-white"

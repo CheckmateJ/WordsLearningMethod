@@ -135,4 +135,8 @@ class Course
 
         return $this;
     }
+    public function __toString()
+    {
+      return $this->language . ' ' . $this->name;
+    }
 }
