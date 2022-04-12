@@ -1,8 +1,11 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    {{ form_start(form) }}
-{{ form_widget(form.course) }}
-{{ form_widget(form.limitOnDay) }}
-    {{ form(form) }}
-    {{ form_end(form) }}
+    <div>
+        {% for plan in learningPlan %}
+            <div>
+                <label>{{ plan.course }}</label>
+                <input type="number" value="{{ plan.limitOnDay }}" class="plan-limit" />
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

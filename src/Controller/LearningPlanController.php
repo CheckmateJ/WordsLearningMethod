@@ -24,19 +24,10 @@ class LearningPlanController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $learningPlan = new LearningPlan();
-
-        $form = $this->createForm(LearningPlanType::class, $learningPlan);
-
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
-            $this->em->persist($learningPlan);
-            $this->em->flush();
-        }
+        $learningPlan = $this->em->getRepository(LearningPlan::class)->findAll();
 
         return $this->render('learning_plan/form.html.twig', [
-            'form' => $form->createView()
+            'learningPlan' => $learningPlan
         ]);
     }
 }
