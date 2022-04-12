@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Course;
+use App\Entity\LearningPlan;
 use App\Entity\Translation;
 use App\Form\CourseType;
 use App\Repository\CourseRepository;
@@ -123,8 +124,6 @@ class CourseController extends AbstractController
      */
     public function edit(Request $request)
     {
-//        $date = new \DateTime('now');
-//        dump($date->add(new \DateInterval('P1D')));
         $course = new Course();
         $form = $this->createForm(CourseType::class, $course);
         $form->handleRequest($request);
@@ -132,11 +131,15 @@ class CourseController extends AbstractController
 
         if ($form->isSubmitted() && $form->isSubmitted()) {
             $course->setUser($user);
+            $plan = new LearningPlan();
+            $plan->setCourse($course);
+            $plan->setLimitOnDay(10);
             if ($form->get('reverse')->getData()) {
                 $reverseCourse = new Course();
                 $reverseCourse->setUser($user);
                 $reverseCourse->setName($form->get('name')->getData() . ' reverse');
                 $reverseCourse->setLanguage($form->get('language')->getData());
+                $reverseCourse->setReverse(0);
                 foreach ($form->get('translations')->getData() as $card) {
                     $translation = new Translation();
                     $translation->setCourse($reverseCourse);
@@ -147,6 +150,7 @@ class CourseController extends AbstractController
                 $this->em->persist($reverseCourse);
             }
             $this->em->persist($course);
+            $this->em->persist($plan);
             $this->em->flush();
 
             return $this->redirectToRoute('course_list');
