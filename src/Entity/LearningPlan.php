@@ -24,7 +24,7 @@ class LearningPlan
     private $course;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $limitOnDay;
 
@@ -50,10 +50,8 @@ class LearningPlan
         return $this->limitOnDay;
     }
 
-    public function setLimitOnDay(int $limitOnDay): self
+    public function setLimitOnDay(int $limitOnDay): void
     {
         $this->limitOnDay = $limitOnDay;
-
-        return $this;
     }
 }
