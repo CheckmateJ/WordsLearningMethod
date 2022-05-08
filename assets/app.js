@@ -96,7 +96,7 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
         'repetition': repetition,
         'id': wordId,
         lastRepetition: lastRepetition,
-        newCourse: newCourse
+        newCourse: newCourseá
     };
     fetch('/course/flashcards', {
         method: 'POST', // or 'PUT'
