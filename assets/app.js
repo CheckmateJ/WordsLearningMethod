@@ -55,6 +55,7 @@ const addTagFormDeleteLink = (li) => {
 let card = document.querySelector('.course-card');
 let flashcard, keys, courseId, front, previous, repetitionId, wordId;
 let i = 1;
+let countCards = 0;
 document.querySelectorAll(".add-repetition").forEach(btn => {
     btn.addEventListener('click', function (e) {
         courseId = btn.dataset.courseId
@@ -75,7 +76,8 @@ document.querySelectorAll(".add-repetition").forEach(btn => {
         } else if (lastRepetition >= 7) {
             currentRepetition = lastRepetition * 2;
         }
-        getWordsFromCourse(btn, courseId, false, currentRepetition, wordId, lastRepetition);
+        countCards++;
+        getWordsFromCourse(btn, courseId, false, currentRepetition, wordId, lastRepetition, countCards);
     })
 })
 
@@ -87,16 +89,15 @@ document.querySelectorAll('.course-card').forEach(card => {
     })
 })
 
-function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = null, lastRepetition) {
-    console.log(id, repetition, wordId)
+function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = null, lastRepetition, countCards) {
     let newCourse = window.location.pathname.indexOf('presentation') > -1;
-    console.log(newCourse)
     const data = {
         'courseId': id,
         'repetition': repetition,
         'id': wordId,
         lastRepetition: lastRepetition,
-        newCourse: newCourseá
+        newCourse: newCourse,
+        'countCards': countCards
     };
     fetch('/course/flashcards', {
         method: 'POST', // or 'PUT'

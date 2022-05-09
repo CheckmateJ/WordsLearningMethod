@@ -100,7 +100,14 @@ class CourseController extends AbstractController
             $translation = $registry->getRepository(Translation::class)->find($id);
             $translation->setRepetition($repetition);
             $translation->setNextRepetition(new \DateTime($repetition . ' days'));
+
+            $learningPlan = $registry->getRepository(LearningPlan::class)->findOneBy(['course' => $courseId]);
+            if($learningPlan->getCurrentCardLearnt() == null || $content->countCards < $learningPlan->getCurrentCardLearnt()){
+                $learningPlan->setCurrentCardLearnt($content->countCards);
+                $learningPlan->setUpdatedAt(new \DateTime('now'));
+            }
             $this->em->persist($translation);
+            $this->em->persist($learningPlan);
             $this->em->flush();
         }
 
@@ -134,6 +141,9 @@ class CourseController extends AbstractController
             $plan = new LearningPlan();
             $plan->setCourse($course);
             $plan->setLimitOnDay(10);
+            $plan->setCreatedAt(new \DateTime('now'));
+            $plan->setUpdatedAt(new \DateTime('now'));
+            $plan->setCurrentCardLearnt(0);
             if ($form->get('reverse')->getData()) {
                 $reverseCourse = new Course();
                 $reverseCourse->setUser($user);
@@ -144,6 +154,7 @@ class CourseController extends AbstractController
                     $translation = new Translation();
                     $translation->setCourse($reverseCourse);
                     $translation->setFrontSide($card->getBackSide());
+                    $translation->setBackSide($card->getFrontSide());
                     $translation->setBackSide($card->getFrontSide());
                     $this->em->persist($translation);
                 }
