@@ -53,7 +53,7 @@ const addTagFormDeleteLink = (li) => {
 }
 
 let card = document.querySelector('.course-card');
-let flashcard, keys, courseId, front, previous, repetitionId, wordId;
+let flashcard, courseId, front, previous, wordId;
 let i = 1;
 let countCards = 0;
 document.querySelectorAll(".add-repetition").forEach(btn => {
@@ -76,8 +76,7 @@ document.querySelectorAll(".add-repetition").forEach(btn => {
         } else if (lastRepetition >= 7) {
             currentRepetition = lastRepetition * 2;
         }
-        countCards++;
-        getWordsFromCourse(btn, courseId, false, currentRepetition, wordId, lastRepetition, countCards);
+        getWordsFromCourse(btn, courseId, false, currentRepetition, wordId, lastRepetition);
     })
 })
 
@@ -89,7 +88,7 @@ document.querySelectorAll('.course-card').forEach(card => {
     })
 })
 
-function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = null, lastRepetition, countCards) {
+function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = null, lastRepetition) {
     let newCourse = window.location.pathname.indexOf('presentation') > -1;
     const data = {
         'courseId': id,
@@ -97,7 +96,6 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
         'id': wordId,
         lastRepetition: lastRepetition,
         newCourse: newCourse,
-        'countCards': countCards
     };
     fetch('/course/flashcards', {
         method: 'POST', // or 'PUT'
@@ -143,7 +141,6 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
 
 let id;
 
-console.log(document.querySelector('.check'))
 let check = document.querySelector('.check');
 let newWords = document.querySelector('.start-new-words')
 let repetition = document.querySelector('.start-repetition');
@@ -174,7 +171,3 @@ document.querySelectorAll('.course-type').forEach(course => {
         id = course.dataset.id;
     })
 })
-
-
-// fetching all words to learning
-// changing cureently way to displaying to loop each word and then displaying words

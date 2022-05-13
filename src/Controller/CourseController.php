@@ -88,27 +88,34 @@ class CourseController extends AbstractController
      */
     public function getFlashcards(\Doctrine\Persistence\ManagerRegistry $registry, Request $request, SerializerInterface $serializer): Response
     {
-        $date = new \DateTime('now');
         $content = json_decode($request->getContent());
         $newCourse = $content->newCourse;
         $courseId = $content->courseId;
         $id = $content->id;
         $repetition = $content->repetition;
-        $lastRepetition = $content->lastRepetition;
+        $message = 'You did all words for today';
+        $date = new \DateTime('now');
+        $learningPlan = $registry->getRepository(LearningPlan::class)->findOneBy(['course' => $courseId]);
+        if($learningPlan->getUpdatedAt()->format('Y-m-d') !== $date->format('Y-m-d')){
+            $countCards = 0;
+        }else{
+            $countCards = $learningPlan->getCurrentCardLearnt() + 1;
+        }
 
-        if ($repetition !== null) {
-            $translation = $registry->getRepository(Translation::class)->find($id);
-            $translation->setRepetition($repetition);
-            $translation->setNextRepetition(new \DateTime($repetition . ' days'));
+        $translation = $registry->getRepository(Translation::class)->find($id);
+        $translation->setRepetition($repetition);
+        $translation->setNextRepetition(new \DateTime($repetition . ' days'));
+        $this->em->persist($translation);
 
-            $learningPlan = $registry->getRepository(LearningPlan::class)->findOneBy(['course' => $courseId]);
-            if($learningPlan->getCurrentCardLearnt() == null || $content->countCards < $learningPlan->getCurrentCardLearnt()){
-                $learningPlan->setCurrentCardLearnt($content->countCards);
-                $learningPlan->setUpdatedAt(new \DateTime('now'));
-            }
-            $this->em->persist($translation);
+        if ($learningPlan->getCurrentCardLearnt() == null || $countCards <= $learningPlan->getLimitOnDay() || $countCards >= $learningPlan->getLimitOnDay()) {
+            $learningPlan->setCurrentCardLearnt($countCards);
+            $learningPlan->setUpdatedAt(new \DateTime('now'));
             $this->em->persist($learningPlan);
-            $this->em->flush();
+        }
+        $this->em->flush();
+
+        if ($learningPlan->getCurrentCardLearnt() === $learningPlan->getLimitOnDay()) {
+            return new JsonResponse(['message' => $message], 200);
         }
 
         if($newCourse){
@@ -118,9 +125,9 @@ class CourseController extends AbstractController
         }
 
         if (!isset($translations[0])) {
-            return new JsonResponse(
-                ['message' => 'You did all words for today'], 200);
+            return new JsonResponse(['message' => $message], 200);
         }
+
         $json = $serializer->serialize($translations[0], 'json', ['groups' => 'show_flashcard']);
         return new JsonResponse($json, 200);
     }
