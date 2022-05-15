@@ -21,13 +21,14 @@ form {
   }
 
   #course_name, #course_language {
-    width: 30%;
+    width: 15%;
   }
 
   fieldset {
     display: none;
   }
 }
+
 .list-group-item:first-child{
   display: none;
 }
