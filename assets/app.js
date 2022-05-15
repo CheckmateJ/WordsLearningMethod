@@ -1,6 +1,5 @@
 import 'bootstrap/js/src/modal';
 import 'bootstrap';
-import './styles/app.css';
 import {Modal} from 'bootstrap';
 
 var registerModal = document.getElementById('registerModal')
@@ -48,7 +47,7 @@ const addTagFormDeleteLink = (li) => {
     removeFormButton.addEventListener('click', (e) => {
         e.preventDefault();
         // remove the li for the tag form
-        item.remove();
+        li.remove();
     });
 }
 
