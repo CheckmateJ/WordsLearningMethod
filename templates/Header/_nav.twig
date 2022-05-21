@@ -1,0 +1,21 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container px-5">
+        <div class="d-inline-flex">
+            <a class="nav-link active text-decoration-none text-white " aria-current="page" href="{{ path('course_list') }}">Course</a>
+            <a class="nav-link active text-decoration-none text-white" aria-current="page" href="{{ path('new_course') }}">New</a>
+            <a class="nav-link active text-decoration-none text-white" aria-current="page" href="{{ path('learning_plan_new') }}">Plan</a>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            {% if app.user %}
+                <a href="{{ path('app_logout') }}" class="nav-link position-absolute text-decoration-none text-white"
+                   style="right: 50px;" id="openLoginModal">Logout</a>
+            {% else %}
+                <a href="{{ path('app_login') }}" class="nav-link position-absolute text-decoration-none text-white"
+                   style="right: 150px;" id="openLoginModal">Login</a>
+                <a href="{{ path('app_register') }}" class="nav-link position-absolute text-decoration-none text-white"
+                   style="right: 50px;"
+                   id="openRegisterModal">Register</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>

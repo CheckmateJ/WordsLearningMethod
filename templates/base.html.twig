@@ -7,7 +7,7 @@
           href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text></svg>">
     {# Run `composer require symfony/webpack-encore-bundle` to start using Symfony UX #}
     {% block stylesheets %}
-        {{ encore_entry_link_tags('css/app') }}
+        {{ encore_entry_link_tags('css/main') }}
     {% endblock %}
 
     {% block javascripts %}
@@ -15,23 +15,16 @@
     {% endblock %}
 </head>
 <body>
-<nav class="nav navbar navbar-dark bg-dark">
-    <div class="d-inline-flex">
-        <a class="nav-link active text-decoration-none text-white " aria-current="page" href="{{ path('course_list') }}">Course</a>
-        <a class="nav-link active text-decoration-none text-white" aria-current="page" href="{{ path('new_course') }}">New</a>
-        <a class="nav-link active text-decoration-none text-white" aria-current="page" href="{{ path('learning_plan_new') }}">Plan</a>
-    </div>
-    {% if app.user %}
-        <a href="{{ path('app_logout') }}" class="nav-link position-absolute text-decoration-none text-white"
-           style="right: 50px;" id="openLoginModal">Logout</a>
-    {% else %}
-        <a href="{{ path('app_login') }}" class="nav-link position-absolute text-decoration-none text-white"
-           style="right: 150px;" id="openLoginModal">Login</a>
-        <a href="{{ path('app_register') }}" class="nav-link position-absolute text-decoration-none text-white"
-           style="right: 50px;"
-           id="openRegisterModal">Register</a>
-    {% endif %}
-</nav>
+
+<!-- Responsive navbar-->
+{{ include('Header/_nav.twig') }}
 {% block body %}{% endblock %}
+
+<footer class="py-5 bg-dark">
+    <div class="container px-4 px-lg-5"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2022</p></div>
+</footer>
+<script src="js/scripts.js"></script>
+
+
 </body>
 </html>
