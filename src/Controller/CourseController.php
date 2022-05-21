@@ -35,25 +35,19 @@ class CourseController extends AbstractController
     public function index(CourseRepository $courseRepository): Response
     {
         $user = $this->getUser();
+        $course = $this->getRepetition(null,$user);
+
+        if(count($courseRepository->findAll()) < 1){
+            return $this->redirectToRoute('new_course');
+        }
+
         return $this->render('course/index.html.twig', [
             'courses' => $courseRepository->findUniqueCourse($user),
-        ]);
-    }
-
-    /**
-     * @Route("/course/chosen/{slug}", name="chosen_course", methods={"POST|GET"})
-     */
-    public function chosenCourse(Request $request): Response
-    {
-        $slug = $request->get('slug');
-        $user = $this->getUser();
-        $course = $this->getRepetition($slug, $user);
-        return $this->render('course/course_list.html.twig', [
-            'courses' => $this->course->findUniqueCourse($user),
             'courseTypes' => $course['type'],
             'repetitionLength' => $course['length']
         ]);
     }
+
 
     /**
      * @Route("/course/{slug}/presentation", name="presentation_course")
@@ -155,7 +149,7 @@ class CourseController extends AbstractController
                 $reverseCourse = new Course();
                 $reverseCourse->setUser($user);
                 $reverseCourse->setName($form->get('name')->getData() . ' reverse');
-                $reverseCourse->setLanguage($form->get('language')->getData());
+                $reverseCourse->setLanguage($form->get('language')->getData() . ' reverse');
                 $reverseCourse->setReverse(0);
                 foreach ($form->get('translations')->getData() as $card) {
                     $translation = new Translation();
@@ -182,7 +176,11 @@ class CourseController extends AbstractController
 
     public function getRepetition($slug, $user)
     {
-        $courseTypes = $this->course->findBy(['language' => $slug, 'user' => $user]);
+        if($slug !== null){
+            $courseTypes = $this->course->findBy(['language' => $slug, 'user' => $user]);
+        }else{
+            $courseTypes = $this->course->findBy([ 'user' => $user]);
+        }
         $date = new \DateTime();
         $date->add(new \DateInterval('PT2H'));
         $count = 0;

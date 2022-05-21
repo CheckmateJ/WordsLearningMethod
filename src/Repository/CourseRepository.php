@@ -36,12 +36,12 @@ class CourseRepository extends ServiceEntityRepository
     }
     */
 
-    public function findUniqueCourse($id)
+    public function findUniqueCourse($user)
     {
         return $this->createQueryBuilder('c')
             ->select('c.id, c.language')
-            ->where('c.user = :id')
-            ->setParameter('id', $id)
+            ->where('c.user = :user')
+            ->setParameter('user', $user)
             ->groupBy('c.language')
             ->getQuery()
             ->getResult();
