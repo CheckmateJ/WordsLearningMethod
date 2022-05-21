@@ -20,8 +20,6 @@ final class Version20220211230450 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE translation DROP FOREIGN KEY FK_B469456FCD8F897F');
-        $this->addSql('DROP TABLE course_type');
         $this->addSql('ALTER TABLE course ADD name VARCHAR(255) NOT NULL');
         $this->addSql('DROP INDEX IDX_B469456FCD8F897F ON translation');
         $this->addSql('ALTER TABLE translation CHANGE course_type_id course_id INT NOT NULL');
