@@ -48,7 +48,6 @@ class CourseController extends AbstractController
         ]);
     }
 
-
     /**
      * @Route("/course/{slug}/presentation", name="presentation_course")
      */
@@ -130,21 +129,30 @@ class CourseController extends AbstractController
      * @Route("/course/new", name="new_course")
      * @Route("/course/edit/{id}", name="edit_course")
      */
-    public function edit(Request $request)
+    public function edit(Request $request, $id = null)
     {
         $course = new Course();
+
+        if($id !== null){
+            $course = $this->doctrine->getRepository(Course::class)->find($id);
+        }
+
         $form = $this->createForm(CourseType::class, $course);
         $form->handleRequest($request);
         $user = $this->getUser();
 
         if ($form->isSubmitted() && $form->isSubmitted()) {
             $course->setUser($user);
-            $plan = new LearningPlan();
-            $plan->setCourse($course);
-            $plan->setLimitOnDay(10);
-            $plan->setCreatedAt(new \DateTime('now'));
-            $plan->setUpdatedAt(new \DateTime('now'));
-            $plan->setCurrentCardLearnt(0);
+            if($id === null){
+                $plan = new LearningPlan();
+                $plan->setCourse($course);
+                $plan->setLimitOnDay(10);
+                $plan->setCreatedAt(new \DateTime('now'));
+                $plan->setUpdatedAt(new \DateTime('now'));
+                $plan->setCurrentCardLearnt(0);
+                $this->em->persist($plan);
+            }
+
             if ($form->get('reverse')->getData()) {
                 $reverseCourse = new Course();
                 $reverseCourse->setUser($user);
@@ -162,7 +170,6 @@ class CourseController extends AbstractController
                 $this->em->persist($reverseCourse);
             }
             $this->em->persist($course);
-            $this->em->persist($plan);
             $this->em->flush();
 
             return $this->redirectToRoute('course_list');
