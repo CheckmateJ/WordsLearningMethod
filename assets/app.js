@@ -59,7 +59,7 @@ let countCards = 0;
 document.querySelectorAll(".add-repetition").forEach(btn => {
     btn.addEventListener('click', function (e) {
         courseId = btn.dataset.courseId
-        let card = document.querySelector('.course-card');
+        card = document.querySelector('.course-card');
         let currentRepetition = 0;
         let lastRepetition = parseInt(card.dataset.repetition);
         wordId = card.dataset.wordId;
@@ -146,6 +146,29 @@ let newWords = document.querySelector('.start-new-words')
 let repetition = document.querySelector('.start-repetition');
 if (check) {
     check.addEventListener('click', function () {
+            let backSide = document.querySelector('.back-side').innerText.replace(/[^a-z -]/gi, '');
+            let frontSide = document.querySelector('.answer-input').value.replace(/[^a-z]/gi, '');
+            document.querySelectorAll('.add-repetition').forEach(value =>{
+                value.classList.remove('active');
+            })
+        if(frontSide.localeCompare(backSide) === 0 ){
+            document.querySelector('.good-answer').classList += ' active';
+        }else if(frontSide.length < (backSide.length -1)){
+            document.querySelector('.wrong-answer').classList += ' active';
+        }else{
+            let mistakes = 0
+            for(const character in frontSide){
+                if(mistakes > 1){
+                    document.querySelector('.wrong-answer').classList += ' active';
+                    break;
+                }else if(frontSide[character] === frontSide[frontSide.length -1] && mistakes < 2){
+                    document.querySelector('.try-again').classList += ' active';
+                }
+                if(frontSide[character] !== backSide[character]){
+                    mistakes++;
+                }
+            }
+        }
 
         document.querySelector('.back-side').style.display = 'block';
         document.querySelectorAll('.add-repetition').forEach(btn => {

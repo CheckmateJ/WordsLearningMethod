@@ -3,47 +3,61 @@
 
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 align-items-center my-5">
-            <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0" src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg" alt="..." /></div>
+            <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0"
+                                       src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg" alt="..."/></div>
             <div class="col-lg-5">
                 <h1 class="font-weight-light">Business Name or Tagline</h1>
-                <p>This is a template that is great for small businesses. It doesn't have too much fancy flare to it, but it makes a great use of the standard Bootstrap core components. Feel free to use this template for any project you want!</p>
+                <p>This is a template that is great for small businesses. It doesn't have too much fancy flare to it,
+                    but it makes a great use of the standard Bootstrap core components. Feel free to use this template
+                    for any project you want!</p>
                 <a class="btn btn-primary" href="#!">Call to Action!</a>
             </div>
         </div>
-        <!-- Call to Action-->
-{#        <div class="card text-white bg-secondary my-5 py-4 text-center">#}
-{#            <div class="card-body"><p class="text-white m-0">This call to action card is a great place to showcase some important information or display a clever tagline!</p></div>#}
-{#        </div>#}
-        <!-- Content Row-->
         <div class="row gx-4 gx-lg-5">
             {% for course in courses %}
                 <div class="col-md-4 mb-5">
                     <div class="card h-100">
-                        <div class="card-body">
+                        <div class="card-body position-relative">
                             <h2 class="card-title d-inline-flex"><a
                                         class="nav-link {% if app.request.get('slug') == course.language %} active {% endif %} "
                                         aria-current="page">{{ course.language }}</a>
                             </h2>
-                            <a class="card-title btn btn-warning w-50 d-inline-flex" href="{{ path('edit_course', {id: course.id}) }}">Edit Course</a>
+                            <a class="card-title d-inline-flex" href="{{ path('edit_course', {id: course.id}) }}">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                     class="bi bi-pen" viewBox="0 0 16 16">
+                                    <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"/>
+                                </svg>
+                            </a>
                             <p class="card-text">
                                 {% for key,type in courseTypes %}
                                 {% if type.language == course.language %}
-                            <li><a class="course-type" data-id="{{ type.id }}"
+                            <li>
+                                <a class="course-type" data-id="{{ type.id }}"
                                    href="{{ path('presentation_course', {slug : type.id}) }}"
                                    data-bs-toggle="modal" data-bs-target="#exampleModal">{{ type.name }}</a>
                                 {% if type.id == repetitionLength|keys[key] %}
                                     <span>{{ repetitionLength[type.id] }}</span>
-                                {% endif %}</li>
+                                {% endif %}
+                            </li>
                             {% endif %}
                             {% endfor %}
                             </p>
                         </div>
-{#                        <div class="card-footer"><a class="btn btn-primary btn-sm"#}
-{#                                                    href="{{ path('chosen_course',{slug: course.language}) }}">More#}
-{#                                Info</a></div>#}
                     </div>
                 </div>
             {% endfor %}
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <a type="button" class="btn btn-primary d-block start-new-words mb-2">Learn new words</a>
+                    <a type="button" class="btn btn-warning d-block start-repetition mb-2">Start repetition</a>
+                    <a type="button" class="btn btn-secondary d-block" data-bs-dismiss="modal">Close</a>
+                </div>
+            </div>
         </div>
     </div>
 {% endblock %}
