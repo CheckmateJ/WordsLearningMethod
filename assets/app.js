@@ -59,7 +59,7 @@ let countCards = 0;
 document.querySelectorAll(".add-repetition").forEach(btn => {
     btn.addEventListener('click', function (e) {
         courseId = btn.dataset.courseId
-        let card = document.querySelector('.course-card');
+        card = document.querySelector('.course-card');
         let currentRepetition = 0;
         let lastRepetition = parseInt(card.dataset.repetition);
         wordId = card.dataset.wordId;
@@ -146,6 +146,15 @@ let newWords = document.querySelector('.start-new-words')
 let repetition = document.querySelector('.start-repetition');
 if (check) {
     check.addEventListener('click', function () {
+            let backSide = document.querySelector('.back-side').innerText.replace(/[^a-z -]/gi, '');
+            let frontSide = document.querySelector('.answer-input').value.replace(/[^a-z]/gi, '');
+        if(backSide.localeCompare(frontSide) < 0){
+            alert('you have to do more exercices')
+        }else if (backSide.localeCompare(frontSide) === 0){
+            alert('everything is correct')
+        }else{
+            alert('you did some mistakes')
+        }
 
         document.querySelector('.back-side').style.display = 'block';
         document.querySelectorAll('.add-repetition').forEach(btn => {
