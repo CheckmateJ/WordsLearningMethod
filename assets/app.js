@@ -148,12 +148,26 @@ if (check) {
     check.addEventListener('click', function () {
             let backSide = document.querySelector('.back-side').innerText.replace(/[^a-z -]/gi, '');
             let frontSide = document.querySelector('.answer-input').value.replace(/[^a-z]/gi, '');
-        if(backSide.localeCompare(frontSide) < 0){
-            alert('you have to do more exercices')
-        }else if (backSide.localeCompare(frontSide) === 0){
-            alert('everything is correct')
+            document.querySelectorAll('.add-repetition').forEach(value =>{
+                value.classList.remove('active');
+            })
+        if(frontSide.localeCompare(backSide) === 0 ){
+            document.querySelector('.good-answer').classList += ' active';
+        }else if(frontSide.length < (backSide.length -1)){
+            document.querySelector('.wrong-answer').classList += ' active';
         }else{
-            alert('you did some mistakes')
+            let mistakes = 0
+            for(const character in frontSide){
+                if(mistakes > 1){
+                    document.querySelector('.wrong-answer').classList += ' active';
+                    break;
+                }else if(frontSide[character] === frontSide[frontSide.length -1] && mistakes < 2){
+                    document.querySelector('.try-again').classList += ' active';
+                }
+                if(frontSide[character] !== backSide[character]){
+                    mistakes++;
+                }
+            }
         }
 
         document.querySelector('.back-side').style.display = 'block';
