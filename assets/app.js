@@ -147,33 +147,39 @@ let repetition = document.querySelector('.start-repetition');
 if (check) {
     check.addEventListener('click', function () {
             let backSide = document.querySelector('.back-side').innerText.replace(/[^a-z -]/gi, '');
-            let frontSide = document.querySelector('.answer-input').value.replace(/[^a-z]/gi, '');
+            let answer = document.querySelector('.answer-input')
+            let frontSide = answer.value.replace(/[^a-z]/gi, '');
             document.querySelectorAll('.add-repetition').forEach(value =>{
                 value.classList.remove('active');
+                value.classList.remove('pulse');
             })
         if(frontSide.localeCompare(backSide) === 0 ){
-            document.querySelector('.good-answer').classList += ' active';
+            document.querySelector('.good-answer').classList += ' active pulse';
         }else if(frontSide.length < (backSide.length -1)){
-            document.querySelector('.wrong-answer').classList += ' active';
+            document.querySelector('.wrong-answer').classList += ' active pulse';
         }else{
             let mistakes = 0
             for(const character in frontSide){
-                if(mistakes > 1){
-                    document.querySelector('.wrong-answer').classList += ' active';
-                    break;
-                }else if(frontSide[character] === frontSide[frontSide.length -1] && mistakes < 2){
-                    document.querySelector('.try-again').classList += ' active';
-                }
                 if(frontSide[character] !== backSide[character]){
                     mistakes++;
                 }
+                if(mistakes > 1){
+                    document.querySelector('.wrong-answer').classList += ' active pulse';
+                    break;
+                }else if((parseInt(character) === frontSide.length -1) && mistakes < 2){
+                    document.querySelector('.try-again').classList += ' active pulse';
+                    break;
+                }
+
             }
         }
+
 
         document.querySelector('.back-side').style.display = 'block';
         document.querySelectorAll('.add-repetition').forEach(btn => {
             btn.style.display = 'inline-flex';
         })
+        answer.value = '';
     })
 }
 
