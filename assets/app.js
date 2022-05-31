@@ -54,8 +54,6 @@ const addTagFormDeleteLink = (li) => {
 
 let card = document.querySelector('.course-card');
 let flashcard, courseId, front, previous, wordId;
-let i = 1;
-let countCards = 0;
 document.querySelectorAll(".add-repetition").forEach(btn => {
     btn.addEventListener('click', function (e) {
         courseId = btn.dataset.courseId
@@ -174,7 +172,6 @@ if (check) {
             }
         }
 
-
         document.querySelector('.back-side').style.display = 'block';
         document.querySelectorAll('.add-repetition').forEach(btn => {
             btn.style.display = 'inline-flex';
@@ -190,9 +187,12 @@ if (newWords) {
 }
 
 if (repetition) {
-    repetition.addEventListener('click', function () {
-        window.location.href = `/course/${id}/repetition`;
-    })
+    if (repetition.dataset.countRepetition) {
+        repetition.addEventListener('click', function () {
+            window.location.href = `/course/${id}/repetition`;
+        })
+    }
+
 }
 
 document.querySelectorAll('.course-type').forEach(course => {

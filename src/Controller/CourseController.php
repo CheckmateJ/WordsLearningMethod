@@ -41,6 +41,7 @@ class CourseController extends AbstractController
             return $this->redirectToRoute('new_course');
         }
 
+        dump($course['type']);
         return $this->render('course/index.html.twig', [
             'courses' => $courseRepository->findUniqueCourse($user),
             'courseTypes' => $course['type'],
@@ -69,7 +70,9 @@ class CourseController extends AbstractController
         $course = $registry->getRepository(Course::class)->findOneBy(['id' => $slug]);
         $type = $course->getLanguage();
         $cards = $this->getRepetition($type, $this->getUser());
-        dump($cards);
+        if($cards['length'][$slug] < 1){
+            return $this->redirectToRoute('course_list');
+        }
         return $this->render('presentation/slideshow.html.twig', [
             'cards' => $cards['cards'][0],
             'courseId' => $request->get('slug')
@@ -190,25 +193,20 @@ class CourseController extends AbstractController
         }
         $date = new \DateTime();
         $date->add(new \DateInterval('PT2H'));
-        $count = 0;
         $countRepetition = [];
         $newWords = [];
         $cardsRepeat = [];
-        foreach ($courseTypes as $key => $type) {
-            $translations = $this->doctrine->getRepository(Translation::class)->findRepetition($courseTypes[$key]->getId());
-            $newCards = $this->doctrine->getRepository(Translation::class)->findBy(['course' => $courseTypes[$key]->getId(), 'repetition' => '0']);
+        foreach ($courseTypes as $type) {
+            $translations = $this->doctrine->getRepository(Translation::class)->findRepetition($type->getId());
+            $newCards = $this->doctrine->getRepository(Translation::class)->findBy(['course' => $type->getId(), 'repetition' => '0']);
             foreach ($translations as $translation) {
-                    $count++;
                     $cardsRepeat[] = $translation;
             }
-            $countRepetition[$type->getId()] = $count;
-            $count = 0;
+//            dd($type, $courseTypes[$key], $type);
+            $countRepetition[$type->getId()] = count($translations);
 
-            foreach ($newCards as $card) {
-                $count++;
-            }
-            $newWords[$type->getId()] = $count;
-            $count = 0;
+
+            $newWords[$type->getId()] = count($newCards);
         }
 
         return ['length' => $countRepetition, 'type' => $courseTypes, 'cards' => $cardsRepeat];
