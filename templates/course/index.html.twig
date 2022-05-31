@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-
+{% set repetitionId = null %}
+{% set repetition = null %}
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 align-items-center my-5">
             <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0"
@@ -29,17 +30,19 @@
                                 </svg>
                             </a>
                             <p class="card-text">
-                                {% for key,type in courseTypes %}
+                            {% for key,type in courseTypes %}
                                 {% if type.language == course.language %}
-                            <li>
-                                <a class="course-type" data-id="{{ type.id }}"
-                                   href="{{ path('presentation_course', {slug : type.id}) }}"
-                                   data-bs-toggle="modal" data-bs-target="#exampleModal">{{ type.name }}</a>
-                                {% if type.id == repetitionLength|keys[key] %}
-                                    <span>{{ repetitionLength[type.id] }}</span>
+                                    <li>
+                                        <a class="course-type" data-id="{{ type.id }}"
+                                               href="{{ path('presentation_course', {slug : type.id}) }}"
+                                               data-bs-toggle="modal" data-bs-target="#exampleModal">{{ type.name }}</a>
+                                        {% if type.id == course.id %}
+                                            {% set repetitionId = course.id %}
+                                            {% set repetition = repetitionLength[type.id] %}
+                                            <span>{{ repetitionLength[type.id] }}</span>
+                                        {% endif %}
+                                    </li>
                                 {% endif %}
-                            </li>
-                            {% endif %}
                             {% endfor %}
                             </p>
                         </div>
@@ -54,7 +57,7 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <a type="button" class="btn btn-primary d-block start-new-words mb-2">Learn new words</a>
-                    <a type="button" class="btn btn-warning d-block start-repetition mb-2">Start repetition</a>
+                    <a type="button" data-course="{{ repetitionId }}" data-count-repetition="{{ repetition }}"  class="btn btn-warning d-block start-repetition mb-2">Start repetition</a>
                     <a type="button" class="btn btn-secondary d-block" data-bs-dismiss="modal">Close</a>
                 </div>
             </div>
