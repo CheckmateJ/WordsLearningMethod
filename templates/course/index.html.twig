@@ -14,13 +14,13 @@
                 <a class="btn btn-primary" href="#!">Call to Action!</a>
             </div>
         </div>
-        <div class="row gx-4 gx-lg-5">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
             {% for course in courses %}
                 <div class="col-md-4 mb-5">
                     <div class="card h-100">
-                        <div class="card-body position-relative">
-                            <h2 class="card-title d-inline-flex"><a
-                                        class="nav-link {% if app.request.get('slug') == course.language %} active {% endif %} "
+                        <div class="card-body position-relative ">
+                            <h2 class="card-title w-100 text-center "><a
+                                        class="nav-link text-info {% if app.request.get('slug') == course.language %} active {% endif %} "
                                         aria-current="page">{{ course.language }}</a>
                             </h2>
                             <a class="card-title d-inline-flex" href="{{ path('edit_course', {id: course.id}) }}">
@@ -33,7 +33,7 @@
                             {% for key,type in courseTypes %}
                                 {% if type.language == course.language %}
                                     <li>
-                                        <a class="course-type" data-id="{{ type.id }}"
+                                        <a class="course-type text-decoration-none text-dark" data-id="{{ type.id }}"
                                                href="{{ path('presentation_course', {slug : type.id}) }}"
                                                data-bs-toggle="modal" data-bs-target="#exampleModal">{{ type.name }}</a>
                                         {% if type.id == course.id %}
@@ -41,6 +41,9 @@
                                             {% set repetition = repetitionLength[type.id] %}
                                             <span>{{ repetitionLength[type.id] }}</span>
                                         {% endif %}
+                                        <div class="progress">
+                                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
                                     </li>
                                 {% endif %}
                             {% endfor %}
