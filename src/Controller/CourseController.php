@@ -34,6 +34,8 @@ class CourseController extends AbstractController
      */
     public function index(CourseRepository $courseRepository): Response
     {
+        $news = json_decode(file_get_contents( 'https://newsdata.io/api/1/news?apikey=pub_7950d38fade3166f8f4966b5f6f725a8f6c8&q=technology&language=en&category=technology'));
+        dump($news);
         $user = $this->getUser();
         $course = $this->getRepetition(null,$user);
 
@@ -41,11 +43,11 @@ class CourseController extends AbstractController
             return $this->redirectToRoute('new_course');
         }
 
-        dump($course['type']);
         return $this->render('course/index.html.twig', [
             'courses' => $courseRepository->findUniqueCourse($user),
             'courseTypes' => $course['type'],
-            'repetitionLength' => $course['length']
+            'repetitionLength' => $course['length'],
+            'news' => $news
         ]);
     }
 

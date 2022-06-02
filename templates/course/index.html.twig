@@ -4,15 +4,36 @@
 {% set repetition = null %}
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 align-items-center my-5">
-            <div class="col-lg-7"><img class="img-fluid rounded mb-4 mb-lg-0"
-                                       src="https://dummyimage.com/900x400/dee2e6/6c757d.jpg" alt="..."/></div>
-            <div class="col-lg-5">
-                <h1 class="font-weight-light">Business Name or Tagline</h1>
-                <p>This is a template that is great for small businesses. It doesn't have too much fancy flare to it,
-                    but it makes a great use of the standard Bootstrap core components. Feel free to use this template
-                    for any project you want!</p>
-                <a class="btn btn-primary" href="#!">Call to Action!</a>
+            <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="3" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="4" aria-label="Slide 3"></button>
+                </div>
+                <div class="carousel-inner" style="height: 250px">
+                    {% for key, result in news.results|slice(0,5)%}
+                    <div class="carousel-item h-100 {% if key < 1%} active {% endif %}" data-bs-interval="20000">
+                        <div class="carousel-caption d-none d-md-block">
+                            <h4>{{ result.title }}</h4>
+                            <p style="font-size: 14px">{{ result.description }}</p>
+                            <a href="{{ result.link }}" target="_blank">Read More</a>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
             </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleDark" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
         </div>
         <div class="row gx-4 gx-lg-5 justify-content-center">
             {% for course in courses %}

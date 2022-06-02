@@ -1,5 +1,5 @@
 import 'bootstrap/js/src/modal';
-import 'bootstrap';
+import './bootstrap';
 import {Modal} from 'bootstrap';
 import './scripts'
 
