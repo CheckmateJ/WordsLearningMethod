@@ -1,37 +1,39 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <div class="container">
-        {{ form_start(form) }}
-        <div class="text-center mt-5">
-            {{ form_widget(form.name, {attr: {placeholder: "enter course name"}}) }}
-            {{ form_widget(form.language,{attr: {placeholder: "enter language"}}) }}
-            <div class="d-inline-block">
-                {{ form_row(form.reverse) }}
+    <section>
+        <div class="container">
+            {{ form_start(form) }}
+            <div class="text-center mt-5">
+                {{ form_widget(form.name, {attr: {placeholder: "enter course name"}}) }}
+                {{ form_widget(form.language,{attr: {placeholder: "enter language"}}) }}
+                <div class="d-inline-block">
+                    {{ form_row(form.reverse) }}
+                </div>
             </div>
-        </div>
-        <ul class="list-group list-group-flush translations"
-            data-index="{{ form.translations|length > 0 ? form.translations|last.vars.name + 1 : 0 }}"
-            data-prototype="{{ form_widget(form.translations.vars.prototype)|e('html_attr') }}">
+            <ul class="list-group list-group-flush translations"
+                data-index="{{ form.translations|length > 0 ? form.translations|last.vars.name + 1 : 0 }}"
+                data-prototype="{{ form_widget(form.translations.vars.prototype)|e('html_attr') }}">
 
-            {% if form.translations | length > 0 %}
-                {% for card in form.translations %}
-                    <li>
-                        <div>
-                            {{ form_row(card.frontSide) }}
-                            {{ form_row(card.backSide) }}
-                        </div>
-                    </li>
-                {% endfor %}
-            {% else %}
-                {{ form_widget(form.translations) }}
-            {% endif %}
-        </ul>
-        <div class="justify-content-center d-inline-flex w-100">
-            <button type="button" class="btn btn-primary add_item_link me-2"
-                    data-collection-holder-class="translations">Add a flash card
-            </button>
-            <button type="submit" class="btn btn-success" name="course_save">Save</button>
+                {% if form.translations | length > 0 %}
+                    {% for card in form.translations %}
+                        <li>
+                            <div>
+                                {{ form_row(card.frontSide) }}
+                                {{ form_row(card.backSide) }}
+                            </div>
+                        </li>
+                    {% endfor %}
+                {% else %}
+                    {{ form_widget(form.translations) }}
+                {% endif %}
+            </ul>
+            <div class="justify-content-center d-inline-flex w-100">
+                <button type="button" class="btn btn-primary add_item_link me-2"
+                        data-collection-holder-class="translations">Add a flash card
+                </button>
+                <button type="submit" class="btn btn-success" name="course_save">Save</button>
+            </div>
+            {{ form_end(form) }}
         </div>
-        {{ form_end(form) }}
-    </div>
+    </section>
 {% endblock %}
