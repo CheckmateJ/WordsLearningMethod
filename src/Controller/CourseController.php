@@ -159,7 +159,11 @@ class CourseController extends AbstractController
             }
 
             if ($form->get('reverse')->getData()) {
-                $reverseCourse = new Course();
+                if($id ===null){
+                    $reverseCourse = new Course();
+                }else{
+                    $reverseCourse = $this->doctrine->getRepository(Course::class)->findOneBy(['name' => $course->getName() . ' reverse']);
+                }
                 $reverseCourse->setUser($user);
                 $reverseCourse->setName($form->get('name')->getData() . ' reverse');
                 $reverseCourse->setLanguage($form->get('language')->getData() . ' reverse');
