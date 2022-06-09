@@ -13,6 +13,12 @@ window.addEventListener('load', function () {
     }
 })
 
+let translations = document.querySelector('.translations-list')
+
+translations.querySelectorAll('.card-row').forEach(card => {
+    addTagFormDeleteLink(card )
+})
+
 document
     .querySelectorAll('.add_item_link')
     .forEach(btn => {
@@ -40,7 +46,7 @@ document
 
     });
 
-const addTagFormDeleteLink = (li) => {
+function addTagFormDeleteLink(li){
     const removeFormButton = document.createElement('button');
     removeFormButton.className = 'btn btn-danger mt-4';
     removeFormButton.innerText = '-';
