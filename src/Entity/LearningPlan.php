@@ -19,8 +19,8 @@ class LearningPlan
     private $id;
 
     /**
-     * @ORM\OneToOne(targetEntity=Course::class, cascade={"persist", "remove"})
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\OneToOne(targetEntity=Course::class, cascade={"persist", "remove"}, )
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      */
     private $course;
 

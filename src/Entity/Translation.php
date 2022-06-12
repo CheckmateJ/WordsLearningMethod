@@ -21,7 +21,7 @@ class Translation
 
     /**
      * @ORM\ManyToOne(targetEntity=Course::class, inversedBy="translations")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      * @Groups({"show_flashcard"})
      */
     private $course;
