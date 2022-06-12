@@ -35,7 +35,6 @@ class CourseController extends AbstractController
     public function index(CourseRepository $courseRepository): Response
     {
         $news = json_decode(file_get_contents( 'https://newsdata.io/api/1/news?apikey=pub_7950d38fade3166f8f4966b5f6f725a8f6c8&q=technology&language=en&category=technology'));
-        dump($news);
         $user = $this->getUser();
         $course = $this->getRepetition(null,$user);
 
@@ -184,7 +183,8 @@ class CourseController extends AbstractController
             return $this->redirectToRoute('course_list');
         }
         return $this->render('course/form.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
+            'course' => $course
         ]);
     }
 
@@ -219,4 +219,16 @@ class CourseController extends AbstractController
 
     }
 
+    /**
+     * @Route("/course/delete/{id}", name="remove_course", methods={"POST"})
+     */
+    public function removeCourse(Request $request, Course $course){
+        $submittedToken = $request->request->get('token');
+        if ($this->isCsrfTokenValid('delete-item', $submittedToken)) {
+            $em = $this->doctrine->getManager();
+            $em->remove($course);
+            $em->flush();
+            return $this->redirectToRoute('course_list');
+        }
+    }
 }
