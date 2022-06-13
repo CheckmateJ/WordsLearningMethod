@@ -14,10 +14,11 @@ window.addEventListener('load', function () {
 })
 
 let translations = document.querySelector('.translations-list')
-
-translations.querySelectorAll('.card-row').forEach(card => {
-    addTagFormDeleteLink(card )
-})
+if(translations) {
+    translations.querySelectorAll('.card-row').forEach(card => {
+        addTagFormDeleteLink(card)
+    })
+}
 
 document
     .querySelectorAll('.add_item_link')
@@ -81,7 +82,9 @@ document.querySelectorAll(".add-repetition").forEach(btn => {
             currentRepetition = lastRepetition * 2;
         }
         getWordsFromCourse(btn, courseId, false, currentRepetition, wordId, lastRepetition);
+        let answer = document.querySelector('.answer-input').value = ''
     })
+
 })
 
 document.querySelectorAll('.course-card').forEach(card => {
@@ -150,39 +153,38 @@ let newWords = document.querySelector('.start-new-words')
 let repetition = document.querySelector('.start-repetition');
 if (check) {
     check.addEventListener('click', function () {
-            let backSide = document.querySelector('.back-side').innerText.replace(/[^a-z -]/gi, '');
-            let answer = document.querySelector('.answer-input')
-            let frontSide = answer.value.replace(/[^a-z]/gi, '');
-            document.querySelectorAll('.add-repetition').forEach(value =>{
-                value.classList.remove('active');
-                value.classList.remove('pulse');
-            })
-        if(frontSide.localeCompare(backSide) === 0 ){
-            document.querySelector('.good-answer').classList += ' active pulse';
-        }else if(frontSide.length < (backSide.length -1)){
-            document.querySelector('.wrong-answer').classList += ' active pulse';
-        }else{
-            let mistakes = 0
-            for(const character in frontSide){
-                if(frontSide[character] !== backSide[character]){
-                    mistakes++;
-                }
-                if(mistakes > 1){
-                    document.querySelector('.wrong-answer').classList += ' active pulse';
-                    break;
-                }else if((parseInt(character) === frontSide.length -1) && mistakes < 2){
-                    document.querySelector('.try-again').classList += ' active pulse';
-                    break;
-                }
-
-            }
-        }
+        //     let backSide = document.querySelector('.back-side').innerText.replace(/[^a-z -]/gi, '');
+        //     let answer = document.querySelector('.answer-input')
+        //     let frontSide = answer.value.replace(/[^a-z]/gi, '');
+        //     document.querySelectorAll('.add-repetition').forEach(value =>{
+        //         value.classList.remove('active');
+        //         value.classList.remove('pulse');
+        //     })
+        // if(frontSide.localeCompare(backSide) === 0 ){
+        //     document.querySelector('.good-answer').classList += ' active pulse';
+        // }else if(frontSide.length < (backSide.length -1)){
+        //     document.querySelector('.wrong-answer').classList += ' active pulse';
+        // }else{
+        //     let mistakes = 0
+        //     for(const character in frontSide){
+        //         if(frontSide[character] !== backSide[character]){
+        //             mistakes++;
+        //         }
+        //         if(mistakes > 1){
+        //             document.querySelector('.wrong-answer').classList += ' active pulse';
+        //             break;
+        //         }else if((parseInt(character) === frontSide.length -1) && mistakes < 2){
+        //             document.querySelector('.try-again').classList += ' active pulse';
+        //             break;
+        //         }
+        //
+        //     }
+        // }
 
         document.querySelector('.back-side').style.display = 'block';
         document.querySelectorAll('.add-repetition').forEach(btn => {
             btn.style.display = 'inline-flex';
         })
-        answer.value = '';
     })
 }
 

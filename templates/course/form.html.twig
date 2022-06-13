@@ -35,8 +35,10 @@
             </div>
             {{ form_end(form) }}
         </div>
+        {% if course.id %}
         <div>
             {% include 'course/_delete.html.twig' %}
         </div>
+        {% endif %}
     </section>
 {% endblock %}
