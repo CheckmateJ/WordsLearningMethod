@@ -93,9 +93,9 @@ class CourseController extends AbstractController
         $message = 'You did all words for today';
         $date = new \DateTime('now');
         $learningPlan = $registry->getRepository(LearningPlan::class)->findOneBy(['course' => $courseId]);
-        if($learningPlan->getUpdatedAt()->format('Y-m-d') !== $date->format('Y-m-d')){
+        if($learningPlan !== null && $learningPlan->getUpdatedAt()->format('Y-m-d') !== $date->format('Y-m-d')){
             $countCards = 0;
-        }else{
+        }else if ($learningPlan !=null){
             $countCards = $learningPlan->getCurrentCardLearnt() + 1;
         }
 
@@ -104,14 +104,14 @@ class CourseController extends AbstractController
         $translation->setNextRepetition(new \DateTime($repetition . ' days'));
         $this->em->persist($translation);
 
-        if ($learningPlan->getCurrentCardLearnt() == null || $countCards <= $learningPlan->getLimitOnDay() || $countCards >= $learningPlan->getLimitOnDay()) {
+        if ($learningPlan !== null && ($learningPlan->getCurrentCardLearnt() == null || $countCards <= $learningPlan->getLimitOnDay() || $countCards >= $learningPlan->getLimitOnDay())) {
             $learningPlan->setCurrentCardLearnt($countCards);
             $learningPlan->setUpdatedAt(new \DateTime('now'));
             $this->em->persist($learningPlan);
         }
         $this->em->flush();
 
-        if ($learningPlan->getCurrentCardLearnt() === $learningPlan->getLimitOnDay()) {
+        if ($learningPlan !== null &&  $learningPlan->getCurrentCardLearnt() === $learningPlan->getLimitOnDay()) {
             return new JsonResponse(['message' => $message], 200);
         }
 
@@ -133,7 +133,7 @@ class CourseController extends AbstractController
      * @Route("/course/new", name="new_course")
      * @Route("/course/edit/{id}", name="edit_course")
      */
-    public function edit(Request $request, $id = null)
+    public function edit(Request $request, ManagerRegistry $registry, $id = null)
     {
         $course = new Course();
 
@@ -158,7 +158,7 @@ class CourseController extends AbstractController
             }
 
             if ($form->get('reverse')->getData()) {
-                if($id ===null){
+                if($id === null){
                     $reverseCourse = new Course();
                 }else{
                     $reverseCourse = $this->doctrine->getRepository(Course::class)->findOneBy(['name' => $course->getName() . ' reverse']);
@@ -168,16 +168,17 @@ class CourseController extends AbstractController
                 $reverseCourse->setLanguage($form->get('language')->getData() . ' reverse');
                 $reverseCourse->setReverse(0);
                 foreach ($form->get('translations')->getData() as $card) {
-                    $translation = new Translation();
-                    $translation->setCourse($reverseCourse);
-                    $translation->setFrontSide($card->getBackSide());
-                    $translation->setBackSide($card->getFrontSide());
-                    $translation->setBackSide($card->getFrontSide());
-                    $this->em->persist($translation);
+                    if(count($registry->getRepository(Translation::class)->findBy(['frontSide' => $card->getFrontSide(), 'backSide' => $card->getBackSide()])) <1) {
+                        $translation = new Translation();
+                        $translation->setCourse($reverseCourse);
+                        $translation->setFrontSide($card->getBackSide());
+                        $translation->setBackSide($card->getFrontSide());
+                        $translation->setBackSide($card->getFrontSide());
+                        $this->em->persist($translation);
+                    }
                 }
                 $this->em->persist($reverseCourse);
             }
-            $this->em->persist($course);
             $this->em->flush();
 
             return $this->redirectToRoute('course_list');
