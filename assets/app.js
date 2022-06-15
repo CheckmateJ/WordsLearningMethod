@@ -15,8 +15,8 @@ window.addEventListener('load', function () {
 
 let translations = document.querySelector('.translations-list')
 if(translations) {
-    translations.querySelectorAll('.card-row').forEach(card => {
-        addTagFormDeleteLink(card)
+    translations.querySelectorAll('tbody tr td:last-child').forEach(td => {
+        addTagFormDeleteLink(td)
     })
 }
 
@@ -25,37 +25,44 @@ document
     .forEach(btn => {
         btn.addEventListener("click", (e) => {
             const collectionHolder = document.querySelector('.' + e.currentTarget.dataset.collectionHolderClass);
-            const item = document.createElement('li');
-            item.className = 'list-group-item';
-            item.innerHTML = collectionHolder
-                .dataset
-                .prototype
-                .replace(
-                    /__name__/g,
-                    collectionHolder.dataset.index
-                );
+            const tr = document.createElement('tr');
+            const tdFront = document.createElement('td');
+            const tdBack = document.createElement('td');
+            const tdAction = document.createElement('td');
+            const inputFront = document.createElement('textarea');
+            const inputBack = document.createElement('textarea');
+            inputFront.setAttribute('id', `course_translations_${ collectionHolder.childElementCount}_frontSide`);
+            inputFront.setAttribute('name', `course[translations][${ collectionHolder.childElementCount}][frontSide]`);
+            inputBack.setAttribute('id', `course_translations_${ collectionHolder.childElementCount}_frontSide`);
+            inputBack.setAttribute('name', `course[translations][${ collectionHolder.childElementCount}][backSide]`);
 
-            collectionHolder.appendChild(item);
+            tdFront.append(inputFront);
+            tdBack.append(inputBack);
+            tr.append(tdFront);
+            tr.append(tdBack);
+            tr.append(tdAction);
+
+            collectionHolder.appendChild(tr);
 
             collectionHolder.dataset.index++
 
-            document.querySelectorAll('ul.translations li:last-child').forEach((li) => {
-                addTagFormDeleteLink(li)
+            document.querySelectorAll('tbody.translations tr:last-child td:last-child').forEach((td) => {
+                addTagFormDeleteLink(td)
             })
 
         })
 
     });
 
-function addTagFormDeleteLink(li){
+function addTagFormDeleteLink(td){
     const removeFormButton = document.createElement('button');
     removeFormButton.className = 'btn btn-danger mt-4';
     removeFormButton.innerText = '-';
-    li.firstElementChild.append(removeFormButton);
+    td.append(removeFormButton);
     removeFormButton.addEventListener('click', (e) => {
         e.preventDefault();
-        // remove the li for the tag form
-        li.remove();
+        // remove the tr for the tag form
+        td.parentElement.remove();
     });
 }
 
