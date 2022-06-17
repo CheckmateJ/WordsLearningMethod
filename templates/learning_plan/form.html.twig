@@ -1,11 +1,18 @@
 {% extends 'base.html.twig' %}
 {% block body %}
     <div>
-        {% for plan in learningPlan %}
-            <div>
-                <label>{{ plan.course }}</label>
-                <input type="number" value="{{ plan.limitOnDay }}" class="plan-limit" />
-            </div>
-        {% endfor %}
+        <form method="post">
+            {% for key,plan in learningPlan %}
+                <div>
+                    <label>
+                        {{ plan.course }}
+                        <input name="learning_plan_{{ plan.id }}" type="number" value="{{ plan.limitOnDay}}"
+                               class="plan-limit"/>
+                    </label>
+                </div>
+            {% endfor %}
+            <button type="submit" id="learning_plan_save" name="learning_plan[save]" class="btn-primary btn">Save
+            </button>
+        </form>
     </div>
 {% endblock %}

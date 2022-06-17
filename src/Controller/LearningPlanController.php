@@ -24,10 +24,22 @@ class LearningPlanController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        $learningPlan = $this->em->getRepository(LearningPlan::class)->findAll();
-
+        $learningPlans = $this->em->getRepository(LearningPlan::class)->findAll();
+        $learning = new LearningPlan();
+        $form = $this->createForm(LearningPlanType::class, $learning);
+        $form->handleRequest($request);
+        if($form->isSubmitted() && $form->isValid() ){
+            foreach ($learningPlans as $plan){
+                if($request->get('learning_plan_'. $plan->getId())){
+                    $plan->setLimitOnDay($request->get('learning_plan_'.$plan->getId()));
+                    $this->em->persist($plan);
+                }
+            }
+            $this->em->flush();
+        }
         return $this->render('learning_plan/form.html.twig', [
-            'learningPlan' => $learningPlan
+            'learningPlan' => $learningPlans,
+            'form' => $form->createView()
         ]);
     }
 }
