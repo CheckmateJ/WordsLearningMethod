@@ -1,18 +1,28 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-    <div>
-        <form method="post">
-            {% for key,plan in learningPlan %}
-                <div>
-                    <label>
-                        {{ plan.course }}
-                        <input name="learning_plan_{{ plan.id }}" type="number" value="{{ plan.limitOnDay}}"
-                               class="plan-limit"/>
-                    </label>
-                </div>
-            {% endfor %}
-            <button type="submit" id="learning_plan_save" name="learning_plan[save]" class="btn-primary btn">Save
-            </button>
-        </form>
+    <div class="d-block me-auto ms-auto pt-md-5 text-end">
+        <div class="accordion accordion-flush" id="accordionFlushExample" style="width: 500px">
+            <form method="post">
+                {% for key,plan in learningPlan %}
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="flush-heading{{ key }}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                                    data-bs-target="#flush-collapse{{ key }}" aria-expanded="false"
+                                    aria-controls="flush-collapse{{ key }}">
+                                {{plan.course }}
+                            </button>
+                        </h2>
+                        <div id="flush-collapse{{ key }}" class="accordion-collapse collapse"
+                             aria-labelledby="flush-heading{{ key }}" data-bs-parent="#accordionFlushExample">
+                            <div class="accordion-body"><input name="learning_plan_{{ plan.id }}" type="number"
+                                                               value="{{ plan.limitOnDay }}"
+                                                               class="plan-limit"/></div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <button type="submit" id="learning_plan_save" name="learning_plan[save]" class="btn-primary btn mt-3 ">Save</button>
+            </form>
+        </div>
+
     </div>
 {% endblock %}

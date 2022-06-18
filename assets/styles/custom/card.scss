@@ -1,51 +1,54 @@
-.card-body {
-  svg {
-    position: absolute;
-    right: 20px;
-    top: 5px;
-  }
-}
-
-.pulse {
-  position: relative;
-  animation: animate 3s linear infinite
-}
-
-@keyframes animate {
-  0% {
-    box-shadow: 0 0 0 0 rgb(255, 109, 74, 0.7), 0 0 0 0 rgb(255, 109, 74, 0.7)
-  }
-  40% {
-    box-shadow: 0 0 0 50px rgb(255, 109, 74, 0), 0 0 0 0 rgb(255, 109, 74, 0.7)
-  }
-  80% {
-    box-shadow: 0 0 0 50px rgb(255, 109, 74, 0), 0 0 0 30px rgb(255, 109, 74, 0)
-  }
-  100% {
-    box-shadow: 0 0 0 0 rgb(255, 109, 74, 0), 0 0 0 30px rgb(255, 109, 74, 0)
-  }
-}
-
-.card {
-  background: #fff;
-  box-shadow: 0 2px 4px 0 rgba(136, 144, 195, 0.2),
-  0 5px 15px 0 rgba(37, 44, 97, 0.15);
-  border-radius: 15px;
-  margin: 8px;
-  padding: 10px 15px;
-  overflow: hidden;
-  transition: 0.7s;
-
-
-  &:hover{
-    background: whitesmoke;
-    color: #fff;
-    transform: scale(1.1);
-    z-index: 9;
+.d-flex.flex-wrap {
+  padding: 0 25px 0 25px;
+  .card-body {
+    svg {
+      position: absolute;
+      right: 20px;
+      top: 5px;
+    }
   }
 
-  li{
-    list-style: none;
+  .pulse {
+    position: relative;
+    animation: animate 3s linear infinite
   }
 
+  @keyframes animate {
+    0% {
+      box-shadow: 0 0 0 0 rgb(255, 109, 74, 0.7), 0 0 0 0 rgb(255, 109, 74, 0.7)
+    }
+    40% {
+      box-shadow: 0 0 0 50px rgb(255, 109, 74, 0), 0 0 0 0 rgb(255, 109, 74, 0.7)
+    }
+    80% {
+      box-shadow: 0 0 0 50px rgb(255, 109, 74, 0), 0 0 0 30px rgb(255, 109, 74, 0)
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgb(255, 109, 74, 0), 0 0 0 30px rgb(255, 109, 74, 0)
+    }
+  }
+
+  .card {
+    background: #fff;
+    box-shadow: 0 2px 4px 0 rgba(136, 144, 195, 0.2),
+    0 5px 15px 0 rgba(37, 44, 97, 0.15);
+    border-radius: 15px;
+    margin: 8px;
+    padding: 10px 15px;
+    overflow: hidden;
+    transition: 0.7s;
+
+
+    &:hover {
+      background: whitesmoke;
+      color: #fff;
+      transform: scale(1.1);
+      z-index: 9;
+    }
+
+    li {
+      list-style: none;
+    }
+
+  }
 }

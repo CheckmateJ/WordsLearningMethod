@@ -14,15 +14,16 @@
         {{ encore_entry_script_tags('app') }}
     {% endblock %}
 </head>
-<body>
+<body class="d-flex flex-column h-100">
 
 <!-- Responsive navbar-->
 {{ include('Header/_nav.twig') }}
 {% block body %}{% endblock %}
 
-<footer class="py-5 bg-dark">
-    <div class="container px-4 px-lg-5"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2022</p></div>
-</footer>
+    <footer class="py-5 bg-dark mt-auto footer">
+        <div class="container px-4 px-lg-5"><p class="m-0 text-center text-white">Copyright &copy; Your Website 2022</p>
+        </div>
+    </footer>
 <script src="js/scripts.js"></script>
 
 
