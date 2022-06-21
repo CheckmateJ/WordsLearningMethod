@@ -52,3 +52,9 @@
 
   }
 }
+table{
+  tr td:last-child{
+    display: flex;
+    height: 90px;
+  }
+}

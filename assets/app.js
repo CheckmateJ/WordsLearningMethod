@@ -61,7 +61,7 @@ document
 
 function addTagFormDeleteLink(td) {
     const removeFormButton = document.createElement('button');
-    removeFormButton.className = 'btn btn-danger mt-4';
+    removeFormButton.className = 'btn btn-danger align-self-center';
     removeFormButton.innerText = '-';
     td.append(removeFormButton);
     removeFormButton.addEventListener('click', (e) => {
