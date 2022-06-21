@@ -14,7 +14,7 @@ window.addEventListener('load', function () {
 })
 
 let translations = document.querySelector('.translations-list')
-if(translations) {
+if (translations) {
     translations.querySelectorAll('tbody tr td:last-child').forEach(td => {
         addTagFormDeleteLink(td)
     })
@@ -31,13 +31,18 @@ document
             const tdAction = document.createElement('td');
             const inputFront = document.createElement('textarea');
             const inputBack = document.createElement('textarea');
-            inputFront.setAttribute('id', `course_translations_${ collectionHolder.childElementCount}_frontSide`);
-            inputFront.setAttribute('name', `course[translations][${ collectionHolder.childElementCount}][frontSide]`);
-            inputBack.setAttribute('id', `course_translations_${ collectionHolder.childElementCount}_frontSide`);
-            inputBack.setAttribute('name', `course[translations][${ collectionHolder.childElementCount}][backSide]`);
-
+            const id = document.createElement('td')
+            inputFront.setAttribute('id', `course_translations_${collectionHolder.childElementCount}_frontSide`);
+            inputFront.setAttribute('class', `form-control`);
+            inputFront.setAttribute('name', `course[translations][${collectionHolder.childElementCount}][frontSide]`);
+            inputBack.setAttribute('id', `course_translations_${collectionHolder.childElementCount}_frontSide`);
+            inputBack.setAttribute('class', `form-control`);
+            inputBack.setAttribute('name', `course[translations][${collectionHolder.childElementCount}][backSide]`);
+            id.setAttribute('class', 'card-id')
+            id.innerText = parseInt(document.querySelector('tr:last-of-type .card-id').innerText) + 1;
             tdFront.append(inputFront);
             tdBack.append(inputBack);
+            tr.append(id);
             tr.append(tdFront);
             tr.append(tdBack);
             tr.append(tdAction);
@@ -45,7 +50,7 @@ document
             collectionHolder.appendChild(tr);
 
             collectionHolder.dataset.index++
-
+            document.querySelector('tbody tr:last-of-type textarea').focus();
             document.querySelectorAll('tbody.translations tr:last-child td:last-child').forEach((td) => {
                 addTagFormDeleteLink(td)
             })
@@ -54,7 +59,7 @@ document
 
     });
 
-function addTagFormDeleteLink(td){
+function addTagFormDeleteLink(td) {
     const removeFormButton = document.createElement('button');
     removeFormButton.className = 'btn btn-danger mt-4';
     removeFormButton.innerText = '-';
@@ -120,7 +125,7 @@ function getWordsFromCourse(element, id, fromCard, repetition = null, wordId = n
     })
         .then(response => response.json())
         .then(data => {
-            if(data.message){
+            if (data.message) {
                 alert(data.message);
                 window.location.href = `/course`;
             }

@@ -14,6 +14,7 @@
             <table class="table">
                 <thead>
                 <tr>
+                    <th scope="col">Id</th>
                     <th scope="col">Front side</th>
                     <th scope="col">Back side</th>
                     <th scope="col">Remove</th>
@@ -23,8 +24,9 @@
                         data-index="{{ form.translations|length > 0 ? form.translations|last.vars.name + 1 : 0 }}"
                         data-prototype="{{ form_widget(form.translations.vars.prototype)|e('html_attr') }}">
                 {% if form.translations | length > 0 %}
-                    {% for card in form.translations %}
+                    {% for key, card in form.translations %}
                         <tr>
+                            <td class="card-id">{{ key  + 1}}</td>
                             <td>{{ form_widget(card.frontSide) }}</td>
                             <td>{{ form_widget(card.backSide) }}</td>
                             <td></td>
@@ -32,6 +34,7 @@
                     {% endfor %}
                 {% else %}
                     <tr >
+                        <td class="card-id">1</td>
                         <td><textarea id="course_translations_0_frontSide" name="course[translations][0][frontSide]"
                                       required="required" placeholder="front side" class="form-control"></textarea></td>
                         <td><textarea id="course_translations_0_backSide" name="course[translations][0][backSide]"
@@ -41,7 +44,7 @@
                 {% endif %}
                 </tbody>
             </table>
-            <div class="justify-content-center d-inline-flex w-100">
+            <div class="justify-content-center d-inline-flex w-100 mt-3">
                 <button type="button" class="btn btn-primary add_item_link me-2"
                         data-collection-holder-class="translations">Add a flash card
                 </button>
