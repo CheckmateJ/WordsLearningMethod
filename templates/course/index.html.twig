@@ -1,26 +1,31 @@
 {% extends 'base.html.twig' %}
 {% block body %}
-{% set repetitionId = null %}
-{% set repetition = null %}
+    {% set repetitionId = null %}
+    {% set repetition = null %}
     <div class="container px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 align-items-center my-5">
             <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
                 <div class="carousel-indicators">
-                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1" aria-label="Slide 2"></button>
-                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2" aria-label="Slide 3"></button>
-                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="3" aria-label="Slide 3"></button>
-                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="4" aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="0" class="active"
+                            aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="1"
+                            aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="2"
+                            aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="3"
+                            aria-label="Slide 3"></button>
+                    <button type="button" data-bs-target="#carouselExampleDark" data-bs-slide-to="4"
+                            aria-label="Slide 3"></button>
                 </div>
                 <div class="carousel-inner" style="height: 250px">
-                    {% for key, result in news.results|slice(0,5)%}
-                    <div class="carousel-item h-100 {% if key < 1%} active {% endif %}" data-bs-interval="20000">
-                        <div class="carousel-caption d-none d-md-block">
-                            <h4>{{ result.title }}</h4>
-                            <p style="font-size: 14px">{{ result.description }}</p>
-                            <a href="{{ result.link }}" target="_blank" rel="noopener">Read More</a>
+                    {% for key, result in news.results|slice(0,5) %}
+                        <div class="carousel-item h-100 {% if key < 1 %} active {% endif %}" data-bs-interval="20000">
+                            <div class="carousel-caption d-none d-md-block">
+                                <h4>{{ result.title }}</h4>
+                                <p style="font-size: 14px">{{ result.description }}</p>
+                                <a href="{{ result.link }}" target="_blank" rel="noopener">Read More</a>
+                            </div>
                         </div>
-                    </div>
                     {% endfor %}
                 </div>
             </div>
@@ -34,23 +39,23 @@
             <span class="visually-hidden">Next</span>
         </button>
     </div>
-        </div>
-        <div class="d-flex flex-wrap gx-4 gx-lg-5 justify-content-center w-100">
+    </div>
+    <div class="d-flex flex-wrap gx-4 gx-lg-5 justify-content-center w-100">
+        <div class="row gx-4 gx-lg-5 justify-content-center">
             {% for course in courses %}
-                <div class="col-md-3 mb-5">
-                    <div class="card h-100">
-                        <div class="card-body position-relative ">
-                            <h2 class="card-title w-100 text-center "><a
-                                        class="nav-link text-info {% if app.request.get('slug') == course.language %} active {% endif %} "
-                                        aria-current="page">{{ course.language }}</a>
-                            </h2>
-                            <p class="card-text">
+                <div class="card">
+                    <div class="card-body position-relative ">
+                        <h2 class="card-title"><a
+                                    class="nav-link text-info {% if app.request.get('slug') == course.language %} active {% endif %} "
+                                    aria-current="page">{{ course.language }}</a>
+                        </h2>
+                        <p class="card-text">
                             {% for key,type in courseTypes %}
                                 {% if type.language == course.language %}
                                     <li class="position-relative">
                                         <a class="course-type text-decoration-none text-dark" data-id="{{ type.id }}"
-                                               href="{{ path('presentation_course', {slug : type.id}) }}"
-                                               data-bs-toggle="modal" data-bs-target="#exampleModal">{{ type.name }}</a>
+                                           href="{{ path('presentation_course', {slug : type.id}) }}"
+                                           data-bs-toggle="modal" data-bs-target="#exampleModal">{{ type.name }}</a>
                                         {% if type.id == course.id %}
                                             {% set repetitionId = course.id %}
                                             {% set repetition = repetitionLength[type.id] %}
@@ -63,13 +68,13 @@
                                             </svg>
                                         </a>
                                         <div class="progress">
-                                            <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
+                                            <div data-progress="{{ progress[type.id] }}" class="progress-bar " role="progressbar"
+                                                 style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                     </li>
                                 {% endif %}
                             {% endfor %}
-                            </p>
-                        </div>
+                        </p>
                     </div>
                 </div>
             {% endfor %}
@@ -81,7 +86,8 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <a type="button" class="btn btn-primary d-block start-new-words mb-2">Learn new words</a>
-                    <a type="button" data-course="{{ repetitionId }}" data-count-repetition="{{ repetition }}"  class="btn btn-warning d-block start-repetition mb-2">Start repetition</a>
+                    <a type="button" data-course="{{ repetitionId }}" data-count-repetition="{{ repetition }}"
+                       class="btn btn-warning d-block start-repetition mb-2">Start repetition</a>
                     <a type="button" class="btn btn-secondary d-block" data-bs-dismiss="modal">Close</a>
                 </div>
             </div>

@@ -33,9 +33,11 @@ document
             const inputBack = document.createElement('textarea');
             const id = document.createElement('td')
             inputFront.setAttribute('id', `course_translations_${collectionHolder.childElementCount}_frontSide`);
+            inputFront.setAttribute('required', true);
             inputFront.setAttribute('class', `form-control`);
             inputFront.setAttribute('name', `course[translations][${collectionHolder.childElementCount}][frontSide]`);
             inputBack.setAttribute('id', `course_translations_${collectionHolder.childElementCount}_frontSide`);
+            inputBack.setAttribute('required', true);
             inputBack.setAttribute('class', `form-control`);
             inputBack.setAttribute('name', `course[translations][${collectionHolder.childElementCount}][backSide]`);
             id.setAttribute('class', 'card-id')
@@ -220,3 +222,10 @@ document.querySelectorAll('.course-type').forEach(course => {
         id = course.dataset.id;
     })
 })
+
+if(document.querySelector('.progress-bar')){
+    document.querySelectorAll('.progress-bar').forEach(bar => {
+        bar.style.width = bar.dataset.progress * 100 + '%';
+        console.log(bar.dataset.progress * 100)
+    })
+}

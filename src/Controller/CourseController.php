@@ -42,11 +42,28 @@ class CourseController extends AbstractController
             return $this->redirectToRoute('new_course');
         }
 
+        $courses = $this->em->getRepository(Course::class)->findAll();
+
+        $courseProgress = [];
+        $count = 0;
+        foreach($courses as $type){
+            foreach($type->getTranslations() as $translation){
+                if($translation->getNextRepetition() !== null){
+                    $count ++;
+                }
+            }
+            $courseProgress[$type->getId()] = $count / ($type->getTranslations()->count() ?: 1);
+
+            $count = 0;
+        }
+
+
         return $this->render('course/index.html.twig', [
             'courses' => $courseRepository->findUniqueCourse($user),
             'courseTypes' => $course['type'],
             'repetitionLength' => $course['length'],
-            'news' => $news
+            'news' => $news,
+            'progress' => $courseProgress
         ]);
     }
 
@@ -165,7 +182,7 @@ class CourseController extends AbstractController
                 }
                 $reverseCourse->setUser($user);
                 $reverseCourse->setName($form->get('name')->getData() . ' reverse');
-                $reverseCourse->setLanguage($form->get('language')->getData() . ' reverse');
+                $reverseCourse->setLanguage($form->get('language')->getData() );
                 $reverseCourse->setReverse(0);
                 foreach ($form->get('translations')->getData() as $card) {
                     if(count($registry->getRepository(Translation::class)->findBy(['frontSide' => $card->getFrontSide(), 'backSide' => $card->getBackSide()])) <1) {
@@ -232,4 +249,6 @@ class CourseController extends AbstractController
             return $this->redirectToRoute('course_list');
         }
     }
+
+
 }

@@ -1,5 +1,9 @@
 .d-flex.flex-wrap {
   padding: 0 25px 0 25px;
+  .card{
+    min-width: 550px;
+    max-width: 550px;
+  }
   .card-body {
     svg {
       position: absolute;
@@ -57,4 +61,8 @@ table{
     display: flex;
     height: 90px;
   }
+}
+
+.progress-bar{
+  background-color:sandybrown ;
 }
