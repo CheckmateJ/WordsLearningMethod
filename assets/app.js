@@ -1,8 +1,7 @@
-import 'bootstrap/js/src/modal';
-import './bootstrap';
+// import 'bootstrap/js/src/modal';
+// import './bootstrap';
 import {Modal} from 'bootstrap';
-import './scripts'
-
+// import './scripts'
 var registerModal = document.getElementById('registerModal')
 var loginModal = document.getElementById('loginModal')
 window.addEventListener('load', function () {

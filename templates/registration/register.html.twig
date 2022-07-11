@@ -17,6 +17,9 @@
                         {{ form_widget(registrationForm.email, {attr: {class: 'form-control', placeholder: 'Enter your address email'}}) }}
                     </div>
                     <div>
+                        {{ form_widget(registrationForm.name, {attr: {class: 'form-control  mt-2', placeholder: 'Enter your name'}}) }}
+                    </div>
+                    <div>
                         {{ form_widget(registrationForm.plainPassword.first, {
                             label: 'Password',
                             attr: {class: 'form-control mt-2 ', placeholder: 'Enter your password'}
