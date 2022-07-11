@@ -9,15 +9,6 @@
             {% if app.user %}
                 <a href="{{ path('app_logout') }}" class="nav-link position-absolute text-decoration-none text-white"
                    style="right: 120px;" id="openLoginModal">Logout</a>
-                <div   class="btn-group ms-3">
-                    <button style="right: 30px" type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        {{ app.user.name }}
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-right">
-                        <button class="dropdown-item" type="button">Basic settings</button>
-                    </div>
-                </div>
-
                 <div class="dropdown">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
                         Dropdown button
@@ -28,8 +19,6 @@
                         <li><a class="dropdown-item" href="#">Something else here</a></li>
                     </ul>
                 </div>
-
-
 {#                <a href="{{ path('app_logout') }}" class="nav-link position-absolute ms-3 text-decoration-none text-white"#}
 {#                   style="right: 30px" id="openLoginModal">{{ app.user.name }}</a>#}
             {% else %}
