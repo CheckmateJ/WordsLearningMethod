@@ -2,7 +2,7 @@
 {% block body %}
     {% set repetitionId = null %}
     {% set repetition = null %}
-    <div class="container px-4 px-lg-5">
+    <div class="container px-4 px-lg-5 position-relative">
         <div class="row gx-4 gx-lg-5 align-items-center my-5">
             <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
                 <div class="carousel-indicators">
@@ -40,7 +40,7 @@
         </button>
     </div>
     </div>
-    <div class="d-flex flex-wrap gx-4 gx-lg-5 justify-content-center w-100">
+    <div class="d-flex flex-wrap gx-4 gx-lg-5 justify-content-center w-100 mb-2">
         <div class="row gx-4 gx-lg-5 justify-content-center">
             {% for course in courses %}
                 <div class="card">

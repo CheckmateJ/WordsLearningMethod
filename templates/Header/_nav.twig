@@ -5,10 +5,19 @@
             <a class="nav-link active text-decoration-none text-white" aria-current="page" href="{{ path('new_course') }}">New</a>
             <a class="nav-link active text-decoration-none text-white" aria-current="page" href="{{ path('learning_plan_new') }}">Plan</a>
         </div>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <div class="collapse navbar-collapse justify-content-end" style="margin-right: -100px" id="navbarSupportedContent">
             {% if app.user %}
-                <a href="{{ path('app_logout') }}" class="nav-link position-absolute text-decoration-none text-white"
-                   style="right: 50px;" id="openLoginModal">Logout</a>
+                <a href="{{ path('app_logout') }}" class="nav-link text-decoration-none text-white me-2" id="openLoginModal">Logout</a>
+                <div class="dropdown">
+                    <a class=" dropdown-toggle text-decoration-none text-white" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ app.user.name }}
+                    </a>
+                    <ul class="dropdown-menu" style="left: -100px" aria-labelledby="dropdownMenuButton1">
+                        <li><a class="dropdown-item" href="{{ path('app_user') }}">Basic settings</a></li>
+                    </ul>
+                </div>
+{#                <a href="{{ path('app_logout') }}" class="nav-link position-absolute ms-3 text-decoration-none text-white"#}
+{#                   style="right: 30px" id="openLoginModal">{{ app.user.name }}</a>#}
             {% else %}
                 <a href="{{ path('app_login') }}" class="nav-link position-absolute text-decoration-none text-white"
                    style="right: 150px;" id="openLoginModal">Login</a>
