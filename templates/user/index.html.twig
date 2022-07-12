@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UserController!{% endblock %}
+
+{% block body %}
+    <div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-center" id="registerModalLabel">Profile settings</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                {{ form_start(form) }}
+                <div class="modal-body">
+                    <div>
+                        {{ form_widget(form.email, {attr: {class: 'form-control', placeholder: 'Enter your address email'}}) }}
+                    </div>
+                    <div>
+                        {{ form_widget(form.name, {attr: {class: 'form-control  mt-2', placeholder: 'Enter your name'}}) }}
+                    </div>
+                    <div>
+                        {{ form_widget(form.password.first, {
+                            label: 'Password',
+                            attr: {class: 'form-control mt-2 ', placeholder: 'Enter your password'}
+                        }) }}
+                    </div>
+                    <div>
+                        {{ form_widget(form.password.second, {
+                            label: 'Password',
+                            attr: {class: 'form-control mt-2 ', placeholder: 'Repeat your password'}
+                        }) }}
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    {{ form_widget(form.save, {attr: {class: 'btn btn-success'}}) }}
+                </div>
+                {{ form_end(form) }}
+
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

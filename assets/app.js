@@ -1,7 +1,7 @@
-// import 'bootstrap/js/src/modal';
-// import './bootstrap';
-// import {Modal} from 'bootstrap';
-// import './scripts'
+import { createPopper } from '@popperjs/core';
+import 'bootstrap'
+import {Modal} from 'bootstrap';
+
 var registerModal = document.getElementById('registerModal')
 var loginModal = document.getElementById('loginModal')
 window.addEventListener('load', function () {
