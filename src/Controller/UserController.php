@@ -34,6 +34,8 @@ class UserController extends AbstractController
             $em = $registry->getManager();
             $em->persist($user);
             $em->flush();
+
+            return $this->redirectToRoute('course_list');
         }
 
         return $this->render('user/index.html.twig',[

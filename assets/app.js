@@ -1,6 +1,7 @@
 import { createPopper } from '@popperjs/core';
 import 'bootstrap'
 import {Modal} from 'bootstrap';
+import {GetNews} from "./news";
 
 var registerModal = document.getElementById('registerModal')
 var loginModal = document.getElementById('loginModal')
@@ -12,6 +13,7 @@ window.addEventListener('load', function () {
     }
 })
 
+
 let translations = document.querySelector('.translations-list')
 if (translations) {
     translations.querySelectorAll('tbody tr td:last-child').forEach(td => {
@@ -19,6 +21,7 @@ if (translations) {
     })
 }
 
+GetNews()
 document
     .querySelectorAll('.add_item_link')
     .forEach(btn => {
