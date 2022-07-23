@@ -3,20 +3,54 @@
     {% set repetitionId = null %}
     {% set repetition = null %}
     <section>
-        <ul class="nav nav-tabs">
-            <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Active</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#">Link</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
-            </li>
-        </ul>
+        <div class="position-relative">
+            <ul class="nav nav-tabs justify-content-center ">
+                <li class="nav-item news-category">
+                    <a class="nav-link active" aria-current="page" href="#">Business</a>
+                </li>
+                <li class="nav-item news-category">
+                    <a class="nav-link" href="#">Entertainment</a>
+                </li>
+                <li class="nav-item news-category">
+                    <a class="nav-link" href="#">Environment</a>
+                </li>
+                <li class="nav-item news-category">
+                    <a class="nav-link" href="#">Food</a>
+                </li>
+                <li class="nav-item news-category">
+                    <a class="nav-link" href="#">Health</a>
+                </li>
+                <li class="nav-item news-category">
+                    <a class="nav-link" href="#">Politics</a>
+                </li>
+                <li class="nav-item news-category">
+                    <a class="nav-link" href="#">Science</a>
+                </li>
+                <li class="nav-item news-category">
+                    <a class="nav-link" href="#">Sports</a>
+                </li>
+                <li class="nav-item news-category">
+                    <a class="nav-link" href="#">Technology</a>
+                </li>
+                <li class="nav-item news-category">
+                    <a class="nav-link" href="#">Top</a>
+                </li>
+                <li class="nav-item news-category">
+                    <a class="nav-link" href="#">World</a>
+                </li>
+                <li class="nav-item">
+                    <select class="form-select  news-language" name="languages">
+{#                        <option data-language="zh">China</option>#}
+                        <option data-language="en" selected="selected">English</option>
+                        <option data-language="de">Germany</option>
+                        <option data-language="pl">Polish</option>
+                        <option data-language="fr">French</option>
+                    </select>
+                </li>
+            </ul>
+
+        </div>
+
         <div class="container px-4 px-lg-5 position-relative">
             <div class="row gx-4 gx-lg-5 align-items-center my-5">
                 <div id="carouselExampleDark" class="carousel carousel-dark slide" data-bs-ride="carousel">
@@ -33,21 +67,19 @@
                                 aria-label="Slide 3"></button>
                     </div>
                     <div class="carousel-inner" style="height: 250px">
-                        {% for key, result in news.results|slice(0,5) %}
-                            <div class="carousel-item h-100 {% if key < 1 %} active {% endif %}"
+                        {% for i  in 0..4 %}
+                            <div class="carousel-item h-100 {% if i < 1 %} active {% endif %}"
                                  data-bs-interval="20000">
-                                <div class="carousel-caption  mh-100 {% if result.image_url %} d-flex {% endif %}">
-                                    <div {% if result.image_url %}class="w-50" {% endif %}>
-                                        <h5>{{result.pubDate}} </h5>
-                                        <h4>{{ result.title }}</h4>
-                                        <div style="font-size: 14px">{{ result.description }}</div>
-                                        <a href="{{ result.link }}" target="_blank" rel="noopener">Read More</a>
+                                <div class="carousel-caption  mh-100 d-flex ">
+                                    <div class='w-50 news-{{ i }} news'>
+                                        <h5 class="publish-date"> </h5>
+                                        <h4 class="news-title"></h4>
+                                        <div class="news-description" style="font-size: 14px"></div>
+                                        <a class="news-read-more" href="" target="_blank" rel="noopener">Read More</a>
                                     </div>
-                                    {% if result.image_url %}
-                                        <div class="w-50">
-                                            <img src="{{ result.image_url }}"/>
+                                        <div class="w-50 img-news d-none">
+                                            <img src=""/>
                                         </div>
-                                    {% endif %}3
                                 </div>
                             </div>
                         {% endfor %}
@@ -71,7 +103,7 @@
                     <div class="card">
                         <div class="card-body position-relative ">
                             <h2 class="card-title"><a
-                                        class="nav-link text-info {% if app.request.get('slug') == course.language %} active {% endif %} "
+                                        class="nav-link text-info text-center {% if app.request.get('slug') == course.language %} active {% endif %} "
                                         aria-current="page">{{ course.language }}</a>
                             </h2>
                             <div class="card-text">

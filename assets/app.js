@@ -231,3 +231,11 @@ if(document.querySelector('.progress-bar')){
         console.log(bar.dataset.progress * 100)
     })
 }
+
+document.querySelectorAll('.news-category').forEach(news => {
+    news.addEventListener('click', function(){
+        let language = document.querySelector('.news-language')
+        let newsLanguage = language.options[language.selectedIndex].dataset.language;
+       GetNews(news.innerText, newsLanguage)
+    })
+})

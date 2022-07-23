@@ -251,10 +251,11 @@ class CourseController extends AbstractController
     }
 
     /**
-     * @Route("/course/get_news/{slug}", name="get_news", methods={"GET"})
+     * @Route("/course/get_news", name="get_news", methods={"POST"})
      */
-    public function getNews($slug = null){
-        $news = file_get_contents( 'https://newsdata.io/api/1/news?apikey=pub_7950d38fade3166f8f4966b5f6f725a8f6c8&q=technology&language=en&category='. $slug );
+    public function getNews(Request $request){
+        $content = json_decode($request->getContent());
+        $news = json_decode(file_get_contents( 'https://newsdata.io/api/1/news?apikey=pub_7950d38fade3166f8f4966b5f6f725a8f6c8&q=' .$content->newsCategory  .'&language=' .$content->languageNews));
         return new JsonResponse($news, 200);
     }
 
