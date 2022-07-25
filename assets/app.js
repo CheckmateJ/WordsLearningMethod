@@ -239,3 +239,8 @@ document.querySelectorAll('.news-category').forEach(news => {
        GetNews(news.innerText, newsLanguage)
     })
 })
+
+let sidebar = document.querySelector('.grammar-sidebar');
+sidebar.addEventListener('click', function(e){
+    sidebar.style.width = '100%';
+})
